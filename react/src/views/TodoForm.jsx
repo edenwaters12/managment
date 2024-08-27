@@ -3,28 +3,27 @@ import axiosClient from "../axios-client.js";
 import { Textarea } from "@/components/ui/textarea.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { Input } from "@/components/ui/Input.jsx";
-import { format } from 'date-fns';
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
 } from "@/components/ui/select.jsx";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-
-export default function TodoForm({ todo }) {
-  const [title, setTitle] = useState(todo ? todo.title : "Django");
-  const [description, setDescription] = useState(todo ? todo.description : "");
-  const [todayDate, setTodayDate] = useState(todo ? todo.todayDate : "");
-  const [startDate, setStartDate] = useState(todo ? todo.startDate : "13:00");
-  const [endDate, setEndDate] = useState(todo ? todo.endDate : "14:00");
-  const [category, setCategory] = useState(todo ? todo.category : "lecturer");
-  const [topic, setTopic] = useState(todo ? todo.topic : "");
-  const navigate = useNavigate();
-  
+export default function TodoForm() {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [todayDate, setTodayDate] = useState(new Date().toISOString().split("T")[0]);
+  const [startDate, setStartDate] = useState("13:00");
+  const [endDate, setEndDate] = useState("14:00");
+  const [category, setCategory] = useState("lecturer");
+  const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const { id } = useParams();
+  const formatTime = (time) => time.slice(0, 5);
+
 
   useEffect(() => {
     if (id) {
@@ -32,27 +31,19 @@ export default function TodoForm({ todo }) {
       axiosClient.get(`/todos/${id}`)
         .then(({ data }) => {
           setLoading(false);
-          setTitle(data.title || "")
-          setDescription(data.description || "")
-          setTodayDate(data.today_date || "")
-          setStartDate(data.start_date || "")
-          setEndDate(data.end_date || "")
-          setCategory(data.category || "")
-          setTopic(data.topic || "")   
+          setTitle(data.title || "");
+          setDescription(data.description || "");
+          setTodayDate(data.today_date || "");
+          setStartDate(formatTime(data.start_date) || "13:00");
+          setEndDate(formatTime(data.end_date) || "14:00");
+          setCategory(data.category || "lecturer");
+          setTopic(data.topic || "");
         })
         .catch(() => {
           setLoading(false);
         });
     }
   }, [id]);
-
-  useEffect(() => {
-    // Set default todayDate to current date if no todo is provided
-    if (!todo) {
-      const today = new Date().toISOString().split("T")[0];
-      setTodayDate(today);
-    }
-  }, [todo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,25 +56,21 @@ export default function TodoForm({ todo }) {
       category,
       topic,
     };
-    // todoData.todayDate = todoData.todayDate.toDateString();
-    // todoData.todayDate = format(todoData.todayDate, 'yyyy-MM-dd');
-
 
     // Determine endpoint and method based on whether we're creating or updating
     const endpoint = id ? `/todos/${id}` : "/todos";
     const method = id ? axiosClient.put : axiosClient.post;
+
     method(endpoint, todoData)
       .then(() => navigate("/todos"))
-      .catch((error) => console.error(todo ? "Error updating todo" : "Error creating todo", error));
+      .catch((error) => console.error(id ? "Error updating todo" : "Error creating todo", error));
   };
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Category
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Category</label>
           <Select
             value={category}
             onValueChange={(value) => setCategory(value)}
@@ -102,9 +89,7 @@ export default function TodoForm({ todo }) {
         </div>
         {category === "lecturer" && (
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Title
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Title</label>
             <Select
               value={title}
               onValueChange={(value) => setTitle(value)}
@@ -124,9 +109,7 @@ export default function TodoForm({ todo }) {
         )}
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Topic
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Topic</label>
           <Input
             type="text"
             value={topic}
@@ -135,9 +118,7 @@ export default function TodoForm({ todo }) {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Description
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Description</label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -145,13 +126,10 @@ export default function TodoForm({ todo }) {
           />
         </div>
 
-        {/* Conditionally render fields based on category */}
-        {category === "lecturer" && (
+        {category === "lecturer"   && (
           <>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Start Time
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Start Time</label>
               <Input
                 type="time"
                 value={startDate}
@@ -160,9 +138,29 @@ export default function TodoForm({ todo }) {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                End Time
-              </label>
+              <label className="block text-sm font-medium text-gray-700">End Time</label>
+              <Input
+                type="time"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="mt-1"
+              />
+            </div>
+          </>
+        )}
+        {category === "time_e"   && (
+          <>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Start Time</label>
+              <Input
+                type="time"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="mt-1"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">End Time</label>
               <Input
                 type="time"
                 value={endDate}
@@ -174,9 +172,7 @@ export default function TodoForm({ todo }) {
         )}
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Today Date
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Today Date</label>
           <Input
             type="date"
             value={todayDate}
@@ -190,7 +186,7 @@ export default function TodoForm({ todo }) {
             type="submit"
             className="bg-blue-500 text-white hover:bg-blue-600"
           >
-            {todo ? "Update Todo" : "Create Todo"}
+            {id ? "Update Todo" : "Create Todo"}
           </Button>
           <Button
             type="button"
@@ -204,3 +200,4 @@ export default function TodoForm({ todo }) {
     </div>
   );
 }
+  

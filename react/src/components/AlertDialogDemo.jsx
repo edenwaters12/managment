@@ -8,9 +8,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog";
-  import { Button } from "@/components/ui/button.jsx";
   
-  export function AlertDialogDemo({ open, onClose, onConfirm, title, description }) {
+  export function AlertDialogDemo({ open,onClose, title,onConfirm, description }) {
     return (
       <AlertDialog open={open} onOpenChange={onClose}>
         <AlertDialogContent>

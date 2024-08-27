@@ -9,7 +9,7 @@ import Users from "./views/Users";
 import UserForm from "./views/UserForm";
 import Todos from "./views/Todos.jsx";
 import TodoForm from "./views/TodoForm.jsx";
-import MoneyManagementPage from "./views/MoneyManagementPage.jsx";
+import MoneyForm from "./views/MoneyForm.jsx";
 import MoneyShow from "./views/MoneyShow.jsx";
 
 
@@ -20,23 +20,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to="/users"/>
+        element: <Navigate to="/dashboard"/>
       },
       {
         path: '/dashboard',
         element: <Dashboard/>
-      },
-      {
-        path: '/todos',
-        element: <Todos/>
-      },
-      {
-        path: '/todos/:id',
-        element: <TodoForm key="Todoupdate"/>
-      },
-      {
-        path: '/todos/new',
-        element: <TodoForm key="TodoCreate"/>
       },
       {
         path: '/users',
@@ -50,14 +38,32 @@ const router = createBrowserRouter([
         path: '/users/:id',
         element: <UserForm key="userUpdate" />
       },
+
+      {
+        path: '/science',
+        element: <Todos/>
+      },
+      {
+        path: '/science/:id',
+        element: <TodoForm key="Todoupdate"/>
+      },
+      {
+        path: '/science/new',
+        element: <TodoForm key="TodoCreate"/>
+      },
+
       {
         path: '/money',
         element: <MoneyShow key="showmonery" />
       },
       {
-        path: '/money/create',
-        element: <MoneyManagementPage key="createmoney" />
-      }
+        path: '/money/:id',
+        element: <MoneyForm key="editmoney" />
+      },
+      {
+        path: '/money/new',
+        element: <MoneyForm key="editmoney" />
+      },
     ]
   },
   {
@@ -69,7 +75,7 @@ const router = createBrowserRouter([
         element: <Login/>
       },
       {
-        path: '/signup',
+        path: '/signupdhruvishlathiya',
         element: <Signup/>
       }
     ]

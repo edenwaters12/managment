@@ -50,7 +50,7 @@ export default function DefaultLayout() {
             <div className="flex space-x-4 mb-2 sm:mb-0">
               <Link to="/dashboard" className="hover:underline">Dashboard</Link>
               <Link to="/users" className="hover:underline">Users</Link>
-              <Link to="/todos" className="hover:underline">Daily</Link>
+              <Link to="/science" className="hover:underline">Data science lecturers</Link>
               <Link to="/money" className="hover:underline">Money</Link>
             </div>
             <div className="flex items-center space-x-4">

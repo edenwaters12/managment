@@ -18,7 +18,7 @@ class TodoController extends Controller
         }
 
         // Sort by today_date in ascending order
-        $query->orderBy('today_date', 'asc');
+        $query->orderBy('today_date', 'desc');
 
         // Fetch the todos
         $todos = $query->get();
@@ -36,7 +36,7 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string',
+            'title' => 'nullable|string',
             'description' => 'nullable|string',
             'todayDate' => 'nullable|date',
             'startDate' => 'nullable|date_format:H:i',
@@ -62,7 +62,7 @@ class TodoController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'required|string',
+            'title' => 'nullable|string',
             'description' => 'nullable|string',
             'todayDate' => 'nullable|date',
             'startDate' => 'nullable|date_format:H:i',

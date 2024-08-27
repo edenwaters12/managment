@@ -12,7 +12,7 @@ export default function Users() {
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const { setNotification } = useStateContext();
+  const { user,setNotification } = useStateContext();
 
   useEffect(() => {
     getUsers();
@@ -72,8 +72,8 @@ export default function Users() {
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Create Date</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"> {user.name == `${import.meta.env.VITE_ADMIN}` && ("Actions")} </th>
+                  </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                 {users.map(u => (
@@ -83,13 +83,16 @@ export default function Users() {
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{u.email}</td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{u.created_at}</td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
+                      {user.name == `${import.meta.env.VITE_ADMIN}` && (<>
                       <Link to={'/users/' + u.id} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Edit</Link>
                       <Button
                         className="ml-4 bg-red-500 text-white hover:bg-red-600"
                         onClick={() => onDeleteClick(u)}
-                      >
+                        >
                         Delete
                       </Button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -37,7 +37,6 @@ export default function MoneyShow() {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
-      {/* Top Navigation and Search Box */}
       <div className="w-full max-w-md mb-4 flex flex-col items-start">
         <div className="flex space-x-4 mb-4">
           <Link to="deposite">
@@ -45,7 +44,7 @@ export default function MoneyShow() {
               Deposit
             </Button>
           </Link>
-          <Link to="withdrow">
+          <Link to="withdraw">
             <Button className="bg-green-500 text-white hover:bg-green-600">
               Withdraw
             </Button>

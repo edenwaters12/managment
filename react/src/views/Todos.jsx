@@ -14,14 +14,13 @@ export default function TodosPage() {
   const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setNotification } = useStateContext();
+  const { user,setNotification } = useStateContext();
   const [selectedUser, setSelectedUser] = useState(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   // const formatDate = (date) => {
   //   return date ? format(new Date(date), 'MMMM dd, yyyy') : 'N/A';
   // };
-
   function getTodo() {
     axiosClient.get(`/todos${category !== "all" ? `?category=${category}` : ""}`)
       .then(response => {
@@ -63,7 +62,7 @@ export default function TodosPage() {
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Todos</h1>
+        <h1 className="text-2xl font-semibold">Data science lecturers</h1>
         <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto">
           <div className="w-full sm:w-1/2 mb-4 sm:mb-0 sm:mr-4">
        <Select
@@ -104,26 +103,37 @@ export default function TodosPage() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"> Date</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Title</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-w  ider">Title</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-w  ider">Topic</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
-                </tr>
+                 
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"> {user.name == `${import.meta.env.VITE_ADMIN}` && (
+                    "Actions"
+
+                  )} </th>
+                  
+                  </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                 {todos.map(todo => (
                   <tr key={todo.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 dark:text-gray-400">{(todo.today_date)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 dark:text-gray-400">{todo.category}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{todo.title}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 dark:text-gray-100">{todo.today_date}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 dark:text-gray-100">{todo.category.toUpperCase()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">{todo.title}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-400">{todo.topic}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{todo.description}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      {user.name == `${import.meta.env.VITE_ADMIN}` && (
+                        <>
                       <Link to={`/todos/${todo.id}`} className="text-blue-500 hover:underline">Edit</Link>
-                      <Button
+                        <Button
                         className="ml-4 bg-red-500 text-white hover:bg-red-600"
                         onClick={() => onDeleteClick(todo)}
-                      >
+                        >
                         Delete
                       </Button>
+                          </>
+                      )}
                     </td>
                   </tr>
                 ))}
