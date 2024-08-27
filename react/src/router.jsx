@@ -75,7 +75,7 @@ const router = createBrowserRouter([
         element: <Login/>
       },
       {
-        path: '/signupdhruvishlathiya',
+        path: '/signup-dhruvishlathiya',
         element: <Signup/>
       }
     ]

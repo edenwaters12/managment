@@ -49,7 +49,6 @@ export default function DefaultLayout() {
           <header className="flex flex-wrap justify-between items-center p-4 bg-gray-800 text-white">
             <div className="flex space-x-4 mb-2 sm:mb-0">
               <Link to="/dashboard" className="hover:underline">Dashboard</Link>
-              <Link to="/users" className="hover:underline">Users</Link>
               <Link to="/science" className="hover:underline">Data science lecturers</Link>
               <Link to="/money" className="hover:underline">Money</Link>
             </div>

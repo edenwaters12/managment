@@ -13,6 +13,7 @@ export default function UserForm() {
   const [user, setUser] = useState({
     id: null,
     name: '',
+    username:'',
     email: '',
     password: '',
     password_confirmation: ''
@@ -83,6 +84,14 @@ export default function UserForm() {
               value={user.name}
               onChange={ev => setUser(prevUser => ({ ...prevUser, name: ev.target.value }))}
               placeholder="Name"
+              required
+              className="w-full"
+            />
+            <Input
+              type="text"
+              value={user.username}
+              onChange={ev => setUser(prevUser => ({ ...prevUser, username: ev.target.value }))}
+              placeholder="username"
               required
               className="w-full"
             />

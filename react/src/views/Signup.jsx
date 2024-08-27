@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/Card.jsx";
 export default function Signup() {
   const nameRef = createRef();
   const emailRef = createRef();
+  const usernameRef = createRef();
   const passwordRef = createRef();
   const passwordConfirmationRef = createRef();
   const { setUser, setToken } = useStateContext();
@@ -18,6 +19,7 @@ export default function Signup() {
     ev.preventDefault();
     const payload = {
       name: nameRef.current.value,
+      username: usernameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
       password_confirmation: passwordConfirmationRef.current.value,
@@ -54,6 +56,13 @@ export default function Signup() {
                 type="text"
                 ref={nameRef}
                 placeholder="Name"
+                required
+                className="w-full"
+              />
+              <Input
+                type="text"
+                ref={usernameRef}
+                placeholder="username"
                 required
                 className="w-full"
               />

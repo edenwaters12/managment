@@ -23,16 +23,30 @@ class UpdateUserRequest extends FormRequest
      * @return array<string, mixed>
      */
     public function rules()
-    {
-        return [
-            'name' => 'required|string|max:55',
-            'email' => 'required|email|unique:users,email,'.$this->id,
-            'password' => [
-                'confirmed',
-                Password::min(8)
-                    ->letters()
-                    ->symbols(),
-            ]
-        ];
-    }
+{
+    return [
+        'name' => 'required|string|max:55',
+        'email' => [
+            'required',
+            'email',
+            // Unique rule excluding the current user's email
+            'unique:users,email,' . $this->user->id,
+        ],
+        'username' => [
+            'required',
+            'string',
+            'min:4',
+            // Ensure username is unique in the users table, excluding the current user's username
+            'unique:users,username,' . $this->user->id,
+        ],
+        'password' => [
+            'nullable', // Make password field optional
+            'confirmed',
+            Password::min(8)
+                ->letters()
+                ->symbols(),
+        ],
+    ];
+}
+
 }

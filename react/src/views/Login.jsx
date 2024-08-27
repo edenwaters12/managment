@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button.jsx";
 
 export default function Login() {
-  const emailRef = createRef()
+  const usernameRef = createRef()
   const passwordRef = createRef()
   const { setUser, setToken } = useStateContext()
   const [message, setMessage] = useState(null)
@@ -16,7 +16,7 @@ export default function Login() {
     ev.preventDefault()
 
     const payload = {
-      email: emailRef.current.value,
+      username: usernameRef.current.value,
       password: passwordRef.current.value,
     }
     axiosClient.post('/login', payload)
@@ -37,7 +37,7 @@ export default function Login() {
   <div className="w-[360px] relative z-10 bg-black max-w-[360px] p-8 shadow-sm">
     <form onSubmit={onSubmit}>
       <h1 className="text-lg mb-4 text-center">Login into your account</h1>
-      <Input ref={emailRef} type="email" placeholder="Enter your Email" className="block w-full mb-4 p-2 border rounded" name="email"/>
+      <Input ref={usernameRef} type="text" placeholder="Enter your username" className="block w-full mb-4 p-2 border rounded" name="username"/>
       <Input ref={passwordRef} type="password" placeholder="Enter Password" className="block w-full mb-4 p-2 border rounded"name="password" />
       <Button className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-sky-700">Login</Button>
       <br />
