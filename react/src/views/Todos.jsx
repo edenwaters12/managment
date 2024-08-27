@@ -84,7 +84,7 @@ export default function TodosPage() {
           </div>
           <Button
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onClick={() => navigate("/todos/new")}
+            onClick={() => navigate("/science/new")}
           >
             Create
           </Button>
@@ -125,7 +125,7 @@ export default function TodosPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       {user.name == `${import.meta.env.VITE_ADMIN}` && (
                         <>
-                      <Link to={`/todos/${todo.id}`} className="text-blue-500 hover:underline">Edit</Link>
+                      <Link to={`/science/${todo.id}`} className="text-blue-500 hover:underline">Edit</Link>
                         <Button
                         className="ml-4 bg-red-500 text-white hover:bg-red-600"
                         onClick={() => onDeleteClick(todo)}
