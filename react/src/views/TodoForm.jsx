@@ -62,7 +62,7 @@ export default function TodoForm() {
     const method = id ? axiosClient.put : axiosClient.post;
 
     method(endpoint, todoData)
-      .then(() => navigate("/todos"))
+      .then(() => navigate("/science"))
       .catch((error) => console.error(id ? "Error updating todo" : "Error creating todo", error));
   };
 
@@ -191,7 +191,7 @@ export default function TodoForm() {
           <Button
             type="button"
             className="bg-gray-500 text-white hover:bg-gray-600"
-            onClick={() => navigate("/todos")}
+            onClick={() => navigate("/science")}
           >
             Cancel
           </Button>
