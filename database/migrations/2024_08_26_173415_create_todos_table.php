@@ -7,9 +7,9 @@ class CreateTodosTable extends Migration
 {
     public function up()
     {
-        Schema::create('todos', function (Blueprint $table) {
+        Schema::create('dataScienceLecture', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->date('today_date')->nullable();
             $table->time('start_date')->nullable();
@@ -22,6 +22,6 @@ class CreateTodosTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('todos');
+        Schema::dropIfExists('dataScienceLecture');
     }
 }
