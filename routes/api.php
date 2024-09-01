@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'auto.logout'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -29,14 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/todos/{id}', [TodoController::class, 'show']);
     Route::post('/todos', [TodoController::class, 'store']);
     Route::put('/todos/{id}', [TodoController::class, 'update']);
-    Route::delete('/todos/{id}', [TodoController::class, 'destroy']);
-
-    
-    // Import todos from CSV or Excel
-    Route::post('/import', [TodoController::class, 'import']);
-    
+    Route::delete('/todos/{id}', [TodoController::class, 'destroy']);    
 });
-Route::get('/export/{format}', [TodoController::class, 'export']);
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
