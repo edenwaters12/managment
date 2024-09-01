@@ -7,20 +7,17 @@ import { Card } from "@/components/ui/card";
 import Loader from "@/components/ui/loader"; // Import your Loader component
 import { useStateContext } from "@/context/ContextProvider.jsx";
 import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx";
-// import { format } from 'date-fns'; // Import date-fns
+import { Table, TableHeader, TableBody, TableCell, TableRow } from "@/components/ui/table"; // Import Shadcn Table components
 
 export default function TodosPage() {
   const [todos, setTodos] = useState([]);
   const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user,setNotification } = useStateContext();
+  const { user, setNotification } = useStateContext();
   const [selectedUser, setSelectedUser] = useState(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
-  // const formatDate = (date) => {
-  //   return date ? format(new Date(date), 'MMMM dd, yyyy') : 'N/A';
-  // };
   function getTodo() {
     axiosClient.get(`/todos${category !== "all" ? `?category=${category}` : ""}`)
       .then(response => {
@@ -38,8 +35,8 @@ export default function TodosPage() {
     getTodo();
   }, [category]);
 
-  const onDeleteClick = (user) => {
-    setSelectedUser(user);
+  const onDeleteClick = (todo) => {
+    setSelectedUser(todo);
     setIsAlertOpen(true);
   };
 
@@ -47,31 +44,31 @@ export default function TodosPage() {
     if (selectedUser) {
       axiosClient.delete(`/todos/${selectedUser.id}`)
         .then(() => {
-          setNotification('User was successfully deleted');
+          setNotification('Todo was successfully deleted');
           getTodo();
         })
         .catch((e) => {
           console.log(e);
-          setNotification('Error deleting user', e);
+          setNotification('Error deleting todo', e);
         });
     }
     setIsAlertOpen(false);
     setSelectedUser(null);
   };
-
   return (
-    <div className="p-4 max-w-4xl mx-auto">
+    <div className="p-4 mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Data science lecturers</h1>
-        <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto">
-          <div className="w-full sm:w-1/2 mb-4 sm:mb-0 sm:mr-4">
-       <Select
+        <h1 className="text-2xl font-semibold">Data Science Lecturers</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto sm:space-x-4">
+          {/* Category dropdown */}
+          <div className="w-full sm:w-1/2 z-40 mb-4 sm:mb-0 sm:order-1 mr-6">
+            <Select
               value={category}
               onValueChange={(value) => setCategory(value)}
               className="mt-1 block w-full"
             >
-              <SelectTrigger>
-                <span className="">{category || "---select---"}</span>
+              <SelectTrigger  className="w-[150px]">
+                <span>{category || "---select---"}</span>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
@@ -82,66 +79,65 @@ export default function TodosPage() {
               </SelectContent>
             </Select>
           </div>
+          
+          {/* Create button */}
           <Button
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 z-50 w-[100px]"
             onClick={() => navigate("/science/new")}
           >
             Create
           </Button>
         </div>
       </div>
-
+      
       <div className="mt-8">
         <Card className="overflow-x-auto">
           {loading ? (
             <div className="flex items-center justify-center p-4">
-              <Loader /> 
+              <Loader />
             </div>
           ) : todos.length > 0 ? (
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-800">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"> Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-w  ider">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-w  ider">Topic</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                 
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"> {user.name == `${import.meta.env.VITE_ADMIN}` && (
-                    "Actions"
-
-                  )} </th>
-                  
-                  </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Topic</TableCell>
+                  <TableCell className="hidden md:table-cell">Description</TableCell>
+                  {user.name === `${import.meta.env.VITE_ADMIN}` && (
+                    <TableCell>Actions</TableCell>
+                  )}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {todos.map(todo => (
-                  <tr key={todo.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 dark:text-gray-100">{todo.today_date}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 dark:text-gray-100">{todo.category.toUpperCase()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300">{todo.title}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-400">{todo.topic}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{todo.description}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      {user.name == `${import.meta.env.VITE_ADMIN}` && (
-                        <>
-                      <Link to={`/science/${todo.id}`} className="text-blue-500 hover:underline">Edit</Link>
+                  <TableRow key={todo.id}>
+                    <TableCell>{todo.today_date}</TableCell>
+                    <TableCell>{todo.category.toUpperCase()}</TableCell>
+                    <TableCell>{todo.title}</TableCell>
+                    <TableCell>{todo.topic}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {todo.description ? (todo.description.length > 20 ? `${todo.description.substring(0, 35)}...` : todo.description) : ' '}
+                    </TableCell>
+                    {user.name === `${import.meta.env.VITE_ADMIN}` && (
+                      <TableCell>
+                        <Link to={`/science/${todo.id}`} className="text-blue-500 hover:underline">Show</Link>
                         <Button
-                        className="ml-4 bg-red-500 text-white hover:bg-red-600"
-                        onClick={() => onDeleteClick(todo)}
+                          className="ml-4 bg-red-500 text-white hover:bg-red-600"
+                          onClick={() => onDeleteClick(todo)}
                         >
-                        Delete
-                      </Button>
-                          </>
-                      )}
-                    </td>
-                  </tr>
+                          Delete
+                        </Button>
+                      </TableCell>
+                    )}
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           ) : (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-              No todos found.
+              No found.
             </div>
           )}
         </Card>
@@ -150,7 +146,7 @@ export default function TodosPage() {
           onClose={() => setIsAlertOpen(false)}
           onConfirm={handleConfirmDelete}
           title="Confirm Deletion"
-          description="Are you sure you want to delete this user? This action cannot be undone."
+          description="Are you sure you want to delete this todo? This action cannot be undone."
         />
       </div>
     </div>
