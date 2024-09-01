@@ -44,8 +44,12 @@ const router = createBrowserRouter([
         element: <Todos/>
       },
       {
-        path: '/science/:id',
+        path: '/science/:id/edit',
         element: <TodoForm key="Todoupdate"/>
+      },
+      {
+        path: '/science/:id',
+        element: <TodoForm key="showDetails"/>
       },
       {
         path: '/science/new',
@@ -79,6 +83,10 @@ const router = createBrowserRouter([
         element: <Signup/>
       }
     ]
+  }, 
+  {
+    path: "/not-found",
+    element: <NotFound />,
   },
   {
     path: "*",
