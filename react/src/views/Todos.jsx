@@ -67,7 +67,7 @@ export default function TodosPage() {
               onValueChange={(value) => setCategory(value)}
               className="mt-1 block w-full"
             >
-              <SelectTrigger  className="w-[150px]">
+              <SelectTrigger  className="xl:w-[150px]">
                 <span>{category || "---select---"}</span>
               </SelectTrigger>
               <SelectContent>
@@ -82,7 +82,7 @@ export default function TodosPage() {
           
           {/* Create button */}
           <Button
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 z-50 w-[100px]"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 z-50 xl:w-[100px]"
             onClick={() => navigate("/science/new")}
           >
             Create
