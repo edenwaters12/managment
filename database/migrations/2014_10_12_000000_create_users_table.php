@@ -23,6 +23,13 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+        \App\Models\User::create([
+            'name' => 'dhruvish',
+            'email' => 'dhruvish@gmail.com',
+            'username' => 'dhruvish',
+            'password' => '$2y$10$H4YrorDBzZj2j1k13DGPEupDqxApOeMplKBS74XMGqgM/lrcvf6R2',
+            'remember_token' => Str::random(10),
+        ]);
     }
 
     /**

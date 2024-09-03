@@ -9,6 +9,8 @@ import Users from "./views/Users";
 import UserForm from "./views/UserForm";
 import Todos from "./views/Todos.jsx";
 import TodoForm from "./views/TodoForm.jsx";
+import WorkShow from "./views/WorkShow.jsx";
+import WorkForm from "./views/WorkForm.jsx";
 import MoneyForm from "./views/MoneyForm.jsx";
 import MoneyShow from "./views/MoneyShow.jsx";
 
@@ -38,7 +40,7 @@ const router = createBrowserRouter([
         path: '/users/:id',
         element: <UserForm key="userUpdate" />
       },
-
+      // data science leatucter details
       {
         path: '/science',
         element: <Todos/>
@@ -54,6 +56,24 @@ const router = createBrowserRouter([
       {
         path: '/science/new',
         element: <TodoForm key="TodoCreate"/>
+      },
+
+      // Work Details
+      {
+        path: '/work',
+        element: <WorkShow/>
+      },
+      {
+        path: '/work/:id/edit',
+        element: <WorkForm key="workUpdate"/>
+      },
+      {
+        path: '/work/:id',
+        element: <WorkForm key="workshow"/>
+      },
+      {
+        path: '/work/new',
+        element: <WorkForm key="workcrete"/>
       },
 
       {

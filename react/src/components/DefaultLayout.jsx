@@ -51,6 +51,7 @@ export default function DefaultLayout() {
               <Link to="/dashboard" className="hover:underline">Dashboard</Link>
               <Link to="/science" className="hover:underline">Data science lecturers</Link>
               <Link to="/money" className="hover:underline">Money</Link>
+              <Link to="/work" className="hover:underline">work</Link>
             </div>
             <div className="flex items-center space-x-4">
               <DropdownMenu>
