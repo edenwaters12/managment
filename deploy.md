@@ -89,3 +89,16 @@ php artisan migrate
 rm -rf api
 ln -s ~/domains/api.thedhruvish.com/public api
 ```
+
+
+## how to clear cache
+```
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan event:clear
+php artisan clear-compiled
+php artisan optimize:clear
+
+```

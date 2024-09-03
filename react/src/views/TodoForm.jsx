@@ -10,6 +10,7 @@ import {
   SelectItem,
 } from "@/components/ui/select.jsx";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useStateContext } from "@/context/ContextProvider.jsx";
 
 export default function TodoForm() {
   const [title, setTitle] = useState("");
@@ -25,6 +26,7 @@ export default function TodoForm() {
   const [mode, setMode] = useState("create"); // Track form mode
   const navigate = useNavigate();
   const { id } = useParams();
+  const { user, setNotification } = useStateContext();
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -217,17 +219,19 @@ export default function TodoForm() {
         </div>
 
         <div className="flex space-x-4">
-          <Button
-            type={mode === "show" ? "button" : "submit"}
-            className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
-            onClick={() => mode === "show" && navigate(`/science/${id}/edit`)}
-          >
-            {mode === "update"
-              ? "Update Todo"
-              : mode == "show"
-              ? "Edit"
-              : "Create Todo"}
-          </Button>
+          {user.name === `${import.meta.env.VITE_ADMIN}` && (
+            <Button
+              type={mode === "show" ? "button" : "submit"}
+              className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
+              onClick={() => mode === "show" && navigate(`/science/${id}/edit`)}
+            >
+              {mode === "update"
+                ? "Update Todo"
+                : mode == "show"
+                ? "Edit"
+                : "Create Todo"}
+            </Button>
+          )}
           <Button
             type="button"
             className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]"
