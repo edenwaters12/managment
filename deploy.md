@@ -45,9 +45,9 @@ php -r "unlink('composer-setup.php');"
 + edit file to open vim editor 
 
 ```
-composer.phar --version
+php composer.phar --version
 
-composer.phar install
+php composer.phar install
 
 cp .env.example .env
 
