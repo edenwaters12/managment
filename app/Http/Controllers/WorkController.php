@@ -8,20 +8,33 @@ use Illuminate\Http\Request;
 class WorkController extends Controller
 {
     // Display a listing of the resource.
-    public function index()
+    public function index(Request $request)
     {
-        return Work::all();
+        $query = Work::query();
+        
+        // Filter by category if provided
+        if ($request->has('category') && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        // Sort by today_date in ascending order
+        $query->orderBy('today_date', 'desc');
+
+        // Fetch the todos
+        $Works = $query->get();
+
+        return response()->json($Works);
     }
 
     // Store a newly created resource in storage.
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string',
-            'Today_date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i',
-            'description' => 'nullable|string',
+            'title' => 'nullable|string',
+            'Today_date' => 'nullable|date',
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
+            'description' => 'nullable',
             'category' => 'required|string|max:255',
         ]);
 
@@ -43,12 +56,12 @@ class WorkController extends Controller
         $work = Work::findOrFail($id);
 
         $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'Today_date' => 'sometimes|required|date',
-            'start_time' => 'sometimes|required|date_format:H:i',
-            'end_time' => 'sometimes|required|date_format:H:i',
-            'description' => 'sometimes|required|string',
-            'category' => 'sometimes|required|string|max:255',
+            'title' => 'sometimes|string|max:255',
+            'Today_date' => 'sometimes|date',
+            'start_time' => 'sometimes|date_format:H:i',
+            'end_time' => 'sometimes|date_format:H:i',
+            'description' => 'sometimes',
+            'category' => 'sometimes|string|max:255',
         ]);
 
         $work->update($request->all());
