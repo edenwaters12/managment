@@ -21,11 +21,17 @@ import {
 } from "@/components/ui/table";
 
 export default function workShow() {
+  const { user,setNotification } = useStateContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!(user.role == 'owner' || user.role == 'admin')){
+      navigate('/404')
+    }
+  });
   const [works, setWorks] = useState([]);
   const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { user, setNotification } = useStateContext();
   const [selectedUser, setSelectedUser] = useState(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
