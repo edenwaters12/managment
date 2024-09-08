@@ -13,6 +13,15 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useStateContext } from "@/context/ContextProvider.jsx";
 
 export default function TodoForm() {
+  const { user } = useStateContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!(user.role === 'owner' || user.role === 'admin' || user.role === 'cdmiadmin')){
+      console.log(user.role)
+      navigate('/404')
+    }
+  });
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [todayDate, setTodayDate] = useState(
@@ -24,9 +33,7 @@ export default function TodoForm() {
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("create"); // Track form mode
-  const navigate = useNavigate();
   const { id } = useParams();
-  const { user, setNotification } = useStateContext();
   const location = useLocation();
   const pathname = location.pathname;
 

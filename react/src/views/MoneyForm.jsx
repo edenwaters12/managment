@@ -16,9 +16,16 @@ import {
 } from "@/components/ui/Select.jsx";
 import { useStateContext } from "../context/ContextProvider.jsx";
 
+
 export default function MoneyForm() {
+  const { user, setNotification } = useStateContext();
   const navigate = useNavigate();
-  const { setNotification } = useStateContext();
+
+  useEffect(() => { 
+    if (!(user.role === 'owner' || user.role === 'admin' )){
+      navigate('/404')
+    }
+  });
   const { id } = useParams(); // Get the ID from the URL parameters
 
   const [formData, setFormData] = useState({

@@ -5,10 +5,18 @@ import { Button } from "@/components/ui/Button.jsx";
 import { Card } from "@/components/ui/Card.jsx";
 import Loader from "@/components/ui/Loader.jsx";
 import { Textarea } from "@/components/ui/Textarea.jsx";
+import { useStateContext } from "@/context/ContextProvider.jsx";
 
 export default function MoneyShow() {
-  const { id } = useParams();
+  const { user } = useStateContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!(user.role === 'owner' || user.role === 'admin' )){
+      navigate('/404')
+    }
+  });
+  const { id } = useParams();
   const [entry, setEntry] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

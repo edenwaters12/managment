@@ -1,73 +1,185 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import {
+  createColumnHelper,
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  flexRender,
+} from "@tanstack/react-table";
 import axiosClient from "../axios-client.js";
-import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select.jsx";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import Loader from "@/components/ui/loader"; // Import your Loader component
+import Loader from "@/components/ui/loader";
 import { useStateContext } from "@/context/ContextProvider.jsx";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableHead,
+} from "@/components/ui/table";
 import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx";
-import { Table, TableHeader, TableBody, TableCell, TableRow } from "@/components/ui/table"; // Import Shadcn Table components
+import { Input } from "@/components/ui/input.jsx";
 
 export default function TodosPage() {
+  const { user, setNotification } = useStateContext();
+  const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
   const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { user, setNotification } = useStateContext();
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedTodo, setSelectedTodo] = useState(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
-  function getTodo() {
-    axiosClient.get(`/todos${category !== "all" ? `?category=${category}` : ""}`)
-      .then(response => {
+  useEffect(() => {
+    if (
+      !(
+        user.role === "owner" ||
+        user.role === "admin" ||
+        user.role === "cdmiadmin"
+      )
+    ) {
+      navigate("/404");
+    }
+  }, [user, navigate]);
+
+  const getTodo = () => {
+    setLoading(true);
+    axiosClient
+      .get(`/todos${category !== "all" ? `?category=${category}` : ""}`)
+      .then((response) => {
         setTodos(response.data);
         setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching todos", error);
         setLoading(false);
       });
-  }
+  };
 
   useEffect(() => {
-    setLoading(true);
     getTodo();
   }, [category]);
 
   const onDeleteClick = (todo) => {
-    setSelectedUser(todo);
+    setSelectedTodo(todo);
     setIsAlertOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (selectedUser) {
-      axiosClient.delete(`/todos/${selectedUser.id}`)
+    if (selectedTodo) {
+      axiosClient
+        .delete(`/todos/${selectedTodo.id}`)
         .then(() => {
-          setNotification('Todo was successfully deleted');
+          setNotification("Todo was successfully deleted");
           getTodo();
         })
         .catch((e) => {
           console.log(e);
-          setNotification('Error deleting todo', e);
+          setNotification("Error deleting todo", e);
         });
     }
     setIsAlertOpen(false);
-    setSelectedUser(null);
+    setSelectedTodo(null);
   };
+
+  const columnHelper = createColumnHelper();
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("today_date", {
+        header: "Date",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("category", {
+        header: "Category",
+        cell: (info) => info.getValue().toUpperCase(),
+      }),
+      columnHelper.accessor("title", {
+        header: "Title",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("topic", {
+        header: "Topic",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("description", {
+        header: "Description",
+        cell: (info) =>
+          info.getValue()
+            ? info.getValue().length > 25
+              ? `${info.getValue().substring(0, 25)}...`
+              : info.getValue()
+            : " ",
+      }),
+      columnHelper.display({
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) =>
+          (user.role === 'owner' || user.role === 'admin')  && (
+            <>
+              <Link
+                to={`/science/${row.original.id}`}
+                className="text-blue-500 hover:underline"
+              >
+                Show
+              </Link>
+              <Button
+                className="ml-4 bg-red-500 text-white hover:bg-red-600"
+                onClick={() => onDeleteClick(row.original)}
+              >
+                Delete
+              </Button>
+            </>
+          ),
+      }),
+    ],
+    [user]
+  );
+
+  const filteredTodos = useMemo(() => {
+    return todos.filter(
+      (todo) =>
+        (todo.title?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (todo.topic?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (todo.description?.toLowerCase() || "").includes(
+          searchQuery.toLowerCase()
+        )
+    );
+  }, [todos, searchQuery]);
+
+  const table = useReactTable({
+    data: filteredTodos,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
+
   return (
     <div className="p-4 mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Data Science Lecturers</h1>
+        <h1
+          className="text-2xl font-semibold cursor-pointer"
+          onClick={() => setSearchQuery("")}
+        >
+          Data Science Lecturers
+        </h1>
         <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto sm:space-x-4">
-          {/* Category dropdown */}
           <div className="w-full sm:w-1/2 z-40 mb-4 sm:mb-0 sm:order-1 mr-6">
             <Select
               value={category}
               onValueChange={(value) => setCategory(value)}
               className="mt-1 block w-full"
             >
-              <SelectTrigger  className="xl:w-[150px]">
+              <SelectTrigger className="xl:w-[150px]">
                 <span>{category || "---select---"}</span>
               </SelectTrigger>
               <SelectContent>
@@ -79,8 +191,14 @@ export default function TodosPage() {
               </SelectContent>
             </Select>
           </div>
-          
-          {/* Create button */}
+
+          <Input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="py-2 px-4 rounded-md focus:outline-none focus:ring-2 sm:order-2 z-50 xl:w-[200px]"
+          />
           <Button
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 z-50 xl:w-[100px]"
             onClick={() => navigate("/science/new")}
@@ -89,55 +207,59 @@ export default function TodosPage() {
           </Button>
         </div>
       </div>
-      
+
       <div className="mt-8">
         <Card className="overflow-x-auto">
           {loading ? (
             <div className="flex items-center justify-center p-4">
               <Loader />
             </div>
-          ) : todos.length > 0 ? (
+          ) : filteredTodos.length > 0 ? (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Topic</TableCell>
-                  <TableCell className="hidden md:table-cell">Description</TableCell>
-                  {user.name === `${import.meta.env.VITE_ADMIN}` && (
-                    <TableCell>Actions</TableCell>
-                  )}
-                </TableRow>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id} className="cursor-pointer">
+                        {header.isPlaceholder ? null : (
+                          <div
+                            {...{
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: " 🔼 ",
+                              desc: " 🔽 ",
+                            }[header.column.getIsSorted()] ?? null}
+                          </div>
+                        )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
               </TableHeader>
               <TableBody>
-                {todos.map(todo => (
-                  <TableRow key={todo.id}>
-                    <TableCell>{todo.today_date}</TableCell>
-                    <TableCell>{todo.category.toUpperCase()}</TableCell>
-                    <TableCell>{todo.title}</TableCell>
-                    <TableCell>{todo.topic}</TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {todo.description ? (todo.description.length > 20 ? `${todo.description.substring(0, 35)}...` : todo.description) : ' '}
-                    </TableCell>
-                    {user.name === `${import.meta.env.VITE_ADMIN}` && (
-                      <TableCell>
-                        <Link to={`/science/${todo.id}`} className="text-blue-500 hover:underline">Show</Link>
-                        <Button
-                          className="ml-4 bg-red-500 text-white hover:bg-red-600"
-                          onClick={() => onDeleteClick(todo)}
-                        >
-                          Delete
-                        </Button>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </TableCell>
-                    )}
+                    ))}
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           ) : (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-              No found.
+              No  found.
             </div>
           )}
         </Card>

@@ -13,6 +13,15 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useStateContext } from "@/context/ContextProvider.jsx";
 
 export default function workForm() {
+  const { user } = useStateContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!(user.role === 'owner' || user.role === 'admin' )){
+      navigate('/404')
+    }
+  });
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [Today_date, setToday_date] = useState(
@@ -23,8 +32,6 @@ export default function workForm() {
   const [category, setCategory] = useState("Collage");
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("create"); // Track form mode
-  const navigate = useNavigate();
-  const { user, setNotification } = useStateContext();
   const { id } = useParams();
   const location = useLocation();
   const pathname = location.pathname;
