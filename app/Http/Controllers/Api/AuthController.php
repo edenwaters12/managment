@@ -20,6 +20,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'username' => $data['username'],
             'email' => $data['email'],
+            'role' => 'null',
             'password' => bcrypt($data['password']),
         ]);
 
@@ -38,6 +39,11 @@ class AuthController extends Controller
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        if ($user->role == 'null' ) {
+            return response([
+                'message' => 'You do not have permission to log in. Contant Owner'
+            ], 422); 
+        }
         $token = $user->createToken('main')->plainTextToken;
         return response(compact('user', 'token'));
     }
