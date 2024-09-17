@@ -57,7 +57,7 @@ export default function MoneyForm() {
           const response = await axiosClient.get(`/money-management/${id}`);
           setFormData(response.data);
         } catch (err) {
-          setNotification("Failed to fetch data");
+          setNotification(err.message);
           setShowAlertDialog(true)
           
         } finally {

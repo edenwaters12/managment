@@ -18,7 +18,6 @@ export default function TodoForm() {
 
   useEffect(() => {
     if (!(user.role === 'owner' || user.role === 'admin' || user.role === 'cdmiadmin')){
-      console.log(user.role)
       navigate('/404')
     }
   });

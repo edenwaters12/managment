@@ -40,23 +40,18 @@ export default function RowItemShow() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   useEffect(() => {
-    if (
-      !(
-        user.role === "owner" ||
-        user.role === "admin" ||
-        user.role === "cdmiadmin" ||
-        user.role === "visiter" ||
-        user.role === "cdmi"
-      )
-    ) {
+    if (!["owner", "admin", "cdmiadmin","cdmi",'visiter'].includes(user.role)) {
+      console.log(user.role)
       navigate("/404");
     }
   }, [user, navigate]);
 
+
+
   const getTodos = () => {
     setLoading(true);
     axiosClient
-      .get(`/row${category !== "all" ? `?category=${category}` : ""}`)
+      .get(`/rows${category !== "all" ? `?category=${category}` : ""}`)
       .then((response) => {
         setTodos(response.data);
         setLoading(false);
@@ -81,7 +76,7 @@ export default function RowItemShow() {
       axiosClient
         .delete(`/row/${selectedTodo.id}`)
         .then(() => {
-          setNotification("Todo was successfully deleted");
+          setNotification("row was successfully deleted");
           getTodos();
         })
         .catch((e) => {
@@ -121,15 +116,14 @@ export default function RowItemShow() {
           const files = JSON.parse(info.getValue() || "[]");
           return files.length > 0 ? (
             files.map((file, index) => (
-              <a
+              <Link
                 key={index}
-                href={`${import.meta.env.VITE_API_BASE_URL}/storage/${file}`}
-                download
+                to={`${import.meta.env.VITE_API_DOWNLOAD_URL}/storage/${file}`}
                 className="text-blue-500 hover:underline"
                 target="_blank"                
               >
-                Download File {index + 1}
-              </a>
+                View File {index + 1}
+              </Link>
             ))
           ) : (
             "No files"

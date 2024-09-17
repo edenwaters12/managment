@@ -3,7 +3,7 @@ import axiosClient from "../axios-client.js";
 import { Textarea } from "@/components/ui/textarea.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { Input } from "@/components/ui/Input.jsx";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useStateContext } from "@/context/ContextProvider.jsx";
 
 export default function RowItemForm() {
@@ -74,7 +74,6 @@ export default function RowItemForm() {
 
   const handleFileChange = (e) => {
     const selectedFiles = [...e.target.files];
-    console.log('Selected files:', selectedFiles); // Log selected files
     setFiles(selectedFiles);
   };
 
@@ -86,7 +85,6 @@ export default function RowItemForm() {
     formData.append("description", description);
     formData.append("author", author || user.username);
     
-    // Append each file to the formData
     files.forEach((file, index) => {
       formData.append(`files[${index}]`, file);
     });
@@ -187,34 +185,34 @@ export default function RowItemForm() {
           {mode === "show" && fileUrls.length > 0 && (
             <div className="mt-2">
               {fileUrls.map((ur, index) => {
-                const url = `${import.meta.env.VITE_API_BASE_URL}/storage/${ur}`
+                const url = `${import.meta.env.VITE_API_DOWNLOAD_URL}/storage/${ur}`
                 const fileType = getFileType(url);
                 return (
                   <div key={index} className="mb-2">
                     {fileType === "image" ? (
                       <div>
                         <img src={url} alt={`File ${index + 1}`} className="max-w-xs max-h-40 object-cover" />
-                        <a href={url} download className="text-blue-600 hover:underline">
+                        <Link to={url} download className="text-blue-600 hover:underline">
                           Download Image {index + 1}
-                        </a>
+                        </Link>
                       </div>
                     ) : fileType === "pdf" ? (
                       <div>
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <Link to={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                           View PDF {index + 1}
-                        </a>
-                        <a href={url} download className="text-blue-600 hover:underline ml-2">
+                        </Link>
+                        <Link to={url} download className="text-blue-600 hover:underline ml-2">
                           Download PDF {index + 1}
-                        </a>
+                        </Link>
                       </div>
                     ) : (
                       <div>
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <Link to={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                           View File {index + 1}
-                        </a>
-                        <a href={url} download className="text-blue-600 hover:underline ml-2">
+                        </Link>
+                        <Link to={url} download className="text-blue-600 hover:underline ml-2">
                           Download File {index + 1}
-                        </a>
+                        </Link>
                       </div>
                     )}
                   </div>
