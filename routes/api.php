@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RowItemController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\WorkController;
 use App\Http\Controllers\Api\AuthController;
@@ -39,6 +40,18 @@ Route::middleware(['auth:sanctum', 'auto.logout'])->group(function () {
     Route::put('/works/{id}', [WorkController::class, 'update']);
     Route::delete('/works/{id}', [WorkController::class, 'destroy']);    
 
+    // row-items
+    Route::get('/rows', [RowItemController::class, 'index']);          
+    Route::post('/row', [RowItemController::class, 'store']);          
+    Route::get('/row/{id}', [RowItemController::class, 'show']);       
+    Route::put('/row/{id}', [RowItemController::class, 'update']);     
+    Route::delete('/row/{id}', [RowItemController::class, 'destroy']);
+
+    // API route for downloading a file
+    Route::get('row/{id}/download/{fileName}', [RowItemController::class, 'download']);
+
+    
+    
 });
 
 Route::post('/signup', [AuthController::class, 'signup']);
