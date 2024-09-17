@@ -13,6 +13,8 @@ import WorkShow from "./views/WorkShow.jsx";
 import WorkForm from "./views/WorkForm.jsx";
 import MoneyForm from "./views/MoneyForm.jsx";
 import MoneyShow from "./views/MoneyShow.jsx";
+import RowItemShow from "./views/RowItems.jsx";
+import RowItemFrom from "./views/RowItemsFrom.jsx";
 
 
 const router = createBrowserRouter([
@@ -88,6 +90,24 @@ const router = createBrowserRouter([
         path: '/money/new',
         element: <MoneyForm key="editmoney" />
       },
+      // row items
+      {
+        path: '/row',
+        element: <RowItemShow key="rowitems" />
+      },
+      {
+        path: '/row/:id/edit',
+        element: <RowItemFrom key="rowEdit"/>
+      },
+      {
+        path: '/row/:id',
+        element: <RowItemFrom key="rowDetail"/>
+      },
+      {
+        path: '/row/new',
+        element: <RowItemFrom key="rowCreate"/>
+      },
+
     ]
   },
   {

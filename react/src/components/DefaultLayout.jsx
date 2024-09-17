@@ -62,6 +62,7 @@ export default function DefaultLayout() {
               </button>
             </div>
             <div className={`flex-col sm:flex-row sm:flex sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 ${menuOpen ? 'flex' : 'hidden'} sm:flex w-full sm:w-auto`}>
+              <Link to="/row" className="hover:underline">Row Items</Link>
               { (user.role === 'owner' || user.role === 'admin') &&(<>
               <Link to="/science" className="hover:underline">Data Science Lecturers</Link>
               <Link to="/money" className="hover:underline">Money</Link>
