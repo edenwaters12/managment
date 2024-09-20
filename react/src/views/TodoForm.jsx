@@ -150,6 +150,7 @@ export default function TodoForm() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="python">Python</SelectItem>
+                <SelectItem value="excel">Excel</SelectItem>
                 <SelectItem value="django">Django</SelectItem>
                 <SelectItem value="numpy">Numpy</SelectItem>
                 <SelectItem value="pandas">Pandas</SelectItem>
