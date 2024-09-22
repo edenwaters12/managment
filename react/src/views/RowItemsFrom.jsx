@@ -11,7 +11,7 @@ export default function RowItemForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!["owner", "admin", "cdmiadmin"].includes(user.role)) {
+    if (!["owner", "admin", "cdmiadmin","cdmi"].includes(user.role)) {
       navigate("/404");
     }
   }, [user, navigate]);
@@ -223,6 +223,7 @@ export default function RowItemForm() {
         </div>
 
         <div className="flex space-x-4">
+        {user.role === "owner" || user.role === "admin" && (
           <Button
             type={mode === "show" ? "button" : "submit"}
             className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
@@ -234,6 +235,7 @@ export default function RowItemForm() {
               ? "Edit"
               : "Create"}
           </Button>
+        )}
           <Button
             type="button"
             className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]"

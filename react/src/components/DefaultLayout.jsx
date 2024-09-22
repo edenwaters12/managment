@@ -68,9 +68,7 @@ export default function DefaultLayout() {
               <Link to="/money" className="hover:underline">Money</Link>
               <Link to="/work" className="hover:underline">Work</Link>
               </>)}
-              { (user.role === 'cdmiadmin' || user.role === 'cdmi') &&(<>
-              <Link to="/science" className="hover:underline">Data Science Lecturers</Link>
-              </>)}
+     
             <div className="flex items-center space-x-4">
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center p-2  rounded-md ">

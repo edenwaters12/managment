@@ -134,7 +134,7 @@ export default function RowItemShow() {
         id: "actions",
         header: "Actions",
         cell: ({ row }) =>
-          (user.role === "owner" || user.role === "admin") && (
+          (user.role === "owner" || user.role === "admin") ? (
             <>
               <Link
                 to={`/row/${row.original.id}`}
@@ -149,7 +149,14 @@ export default function RowItemShow() {
                 Delete
               </Button>
             </>
-          ),
+          ) : (
+            <Link
+            to={`/row/${row.original.id}`}
+            className="text-blue-500 hover:underline"
+          >
+            Show
+          </Link>
+          )
       }),
     ],
     [user]
