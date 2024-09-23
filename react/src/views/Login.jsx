@@ -12,51 +12,134 @@ export default function Login() {
   const { setUser, setToken } = useStateContext();
   const [message, setMessage] = useState(null);
   const [data, setData] = useState("");
-
-  // useEffect(() => {
-  //   axiosClient.get('https://ipinfo.io/json?token=9b203c2cebb8bc')
-  //     .then(({data}) => {
-  //       console.log(data)
-  //       setData(data)
-  //     })
-  // });
+  let payload;
 
   const onSubmit = (ev) => {
     ev.preventDefault();
-    
-    axiosClient
-      .get("https://ipinfo.io/json?token=9b203c2cebb8bc")
-      .then(({ data }) => {
-        setData(data);
-        const payload = {
-          username: usernameRef.current.value,
-          password: passwordRef.current.value,
-          data: data,
-        };
-        console.log(payload); // Log the correct object
-        return axiosClient.post("/login", payload);
-      })
-      .then(({ data }) => {
-        setUser(data.user);
-        setToken(data.token);
-      })
-      .catch((err) => {
-        // Handle the case where err.response might be undefined
-        if (err.response) {
-          const response = err.response;
-          if (response.status === 422) {
-            setMessage(response.data.message);
+
+    const userAgent = navigator.userAgent;
+    let browserDetails = {}; // Initialize browserDetails variable
+
+    // Check if userAgentData is available
+    if ("userAgentData" in navigator) {
+      navigator.userAgentData
+        .getHighEntropyValues(["platform", "brands"])
+        .then((data) => {
+          // Populate browserDetails
+          browserDetails = {
+            platform: navigator.platform,
+            language: navigator.language,
+            online: navigator.onLine,
+            screenWidth: window.screen.width,
+            screenHeight: window.screen.height,
+            cookiesEnabled: navigator.cookieEnabled,
+            hardwareConcurrency: navigator.hardwareConcurrency,
+            deviceMemory: navigator.deviceMemory,
+            brands: data.brands.map((brand) => brand.brand).join(", "),
+            mobile: /Mobi|Android/i.test(navigator.userAgent), // Check for mobile devices
+          };
+
+          // Proceed with the request to get IP information
+          return axiosClient.get("/get-ipinfo");
+        })
+        .then(({ data }) => {
+          // Add browser information to the data
+
+          // Prepare payload for login
+          const payload = {
+            username: usernameRef.current.value,
+            password: passwordRef.current.value,
+            data: data, // IP info data with browser info
+            more: browserDetails, // IP info data with browser info
+          };
+
+          // Send login request
+          return axiosClient.post("/login", payload);
+        })
+        .then(({ data }) => {
+          setUser(data.user);
+          setToken(data.token);
+        })
+        .catch(async (err) => {
+          console.error("Error during IP info request:", err);
+          setMessage(`Error during IP info request: ${err}. Please try again.`);
+
+          // Handle errors for the local request
+          if (err.response) {
+            const response = err.response;
+            if (response.status === 422) {
+              setMessage(response.data.message);
+            } else {
+              console.error("Server responded with an error:", response);
+              setMessage("An error occurred while processing your request."); // Generic error message
+            }
           } else {
-            console.error("Server responded with an error:", response);
+            try {
+              const { data } = await axiosClient.get(
+                `https://ipinfo.io/json?token=${
+                  import.meta.env.VITE_IP_INFO_TOKEN
+                }`
+              );
+
+              // Add browser information to the data
+              const payloadData = { ...data, browser: userAgent };
+              setData(payloadData);
+
+              // Prepare payload for login again with external IP data
+              const payload = {
+                username: usernameRef.current.value,
+                password: passwordRef.current.value,
+                data: payloadData, // External IP info data with browser info
+              };
+              console.log("Login payload with external IP info:");
+
+              const { data: data_1 } = await axiosClient.post(
+                "/login",
+                payload
+              );
+              setUser(data_1.user);
+              setToken(data_1.token);
+              console.log("Login successful with external IP info:");
+            } catch (err_1) {
+              console.error(
+                "Error during external IP info request or login:",
+                err_1
+              );
+              setMessage("Failed to log in. Please try again."); // Set error message for login failure
+            }
           }
-        } else {
-          console.error("An error occurred (no response from server):", err.message);
-          alert("Network or server error. Please try again later.");
-        }
-      });
+        });
+    } else {
+      console.log("User agent data is not supported in this browser.");
+      setMessage("User agent data is not supported in this browser.");
+      // Directly request the IP info if userAgentData is not available
+      axiosClient
+        .get("/get-ipinfo")
+        .then(({ data }) => {
+          // Add browser information (using fallback)
+          const payloadData = { ...data, browser: userAgent };
+          setData(payloadData);
+
+          // Prepare payload for login
+          const payload = {
+            username: usernameRef.current.value,
+            password: passwordRef.current.value,
+            data: payloadData, // IP info data with browser info
+          };
+
+          // Send login request
+          return axiosClient.post("/login", payload);
+        })
+        .then(({ data }) => {
+          setUser(data.user);
+          setToken(data.token);
+        })
+        .catch((err) => {
+          console.error("Error during fallback IP info request:", err);
+          setMessage("Failed to log in. Please try again."); // Handle fallback error
+        });
+    }
   };
-  
-  
 
   return (
     <div className="flex justify-center items-center min-h-screen">

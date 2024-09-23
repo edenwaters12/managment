@@ -3,6 +3,7 @@
 use App\Http\Controllers\RowItemController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\WorkController;
+use App\Http\Controllers\IpInfoController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -49,10 +50,14 @@ Route::middleware(['auth:sanctum', 'auto.logout'])->group(function () {
 
     // API route for downloading a file
     Route::get('row/{id}/download/{fileName}', [RowItemController::class, 'download']);
-
+    
+    Route::get('/log', [IpInfoController::class, 'index']);
+    Route::delete('/log/{id?}', [IpInfoController::class, 'delete']);
+    
     
     
 });
+Route::get('/get-ipinfo', [IpInfoController::class, 'getIpInfo']);
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
