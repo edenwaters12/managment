@@ -15,6 +15,7 @@ import MoneyForm from "./views/MoneyForm.jsx";
 import MoneyShow from "./views/MoneyShow.jsx";
 import RowItemShow from "./views/RowItems.jsx";
 import RowItemFrom from "./views/RowItemsFrom.jsx";
+import Logpage from "./views/log.jsx";
 
 
 const router = createBrowserRouter([
@@ -76,6 +77,14 @@ const router = createBrowserRouter([
       {
         path: '/work/new',
         element: <WorkForm key="workcrete"/>
+      },
+      {
+        path: '/log',
+        element: <Logpage key="log"/>
+      },
+      {
+        path: '/log/:id',
+        element: <Logpage key="log"/>
       },
 
       {

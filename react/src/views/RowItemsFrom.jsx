@@ -11,7 +11,7 @@ export default function RowItemForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!["owner", "admin", "cdmiadmin","cdmi"].includes(user.role)) {
+    if (!["owner", "admin", "cdmiadmin", "cdmi"].includes(user.role)) {
       navigate("/404");
     }
   }, [user, navigate]);
@@ -33,6 +33,9 @@ export default function RowItemForm() {
       setMode("create");
     } else if (pathname.includes("/edit") && id) {
       setMode("update");
+      if (!["owner", "admin", "cdmiadmin"].includes(user.role)) {
+        navigate("/404");
+      }
       setLoading(true);
       axiosClient
         .get(`/row/${id}`)
@@ -44,7 +47,7 @@ export default function RowItemForm() {
           setCreateAt(data.created_at || "");
           if (data.files) {
             const parsedFiles = JSON.parse(data.files);
-            setFileUrls(parsedFiles.map(file => file.replace(/\\/, "/"))); // Normalize paths
+            setFileUrls(parsedFiles.map((file) => file.replace(/\\/, "/"))); // Normalize paths
           }
         })
         .catch(() => {
@@ -63,7 +66,7 @@ export default function RowItemForm() {
           setCreateAt(data.created_at || "");
           if (data.files) {
             const parsedFiles = JSON.parse(data.files);
-            setFileUrls(parsedFiles.map(file => file.replace(/\\/, "/"))); // Normalize paths
+            setFileUrls(parsedFiles.map((file) => file.replace(/\\/, "/"))); // Normalize paths
           }
         })
         .catch(() => {
@@ -84,7 +87,7 @@ export default function RowItemForm() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("author", author || user.username);
-    
+
     files.forEach((file, index) => {
       formData.append(`files[${index}]`, file);
     });
@@ -144,30 +147,21 @@ export default function RowItemForm() {
             disabled={mode === "show"}
           />
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Author
-          </label>
-          <Input
-            type="text"
-            value={author}
-            className="mt-1"
-            disabled
-          />
-        </div>
+        {["owner", "admin", "cdmiadmin"].includes(user.role) && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Author
+            </label>
+            <Input type="text" value={author} className="mt-1" disabled />
+          </div>
+        )}
 
         {mode !== "create" && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Created At
             </label>
-            <Input
-              type="text"
-              value={createAt}
-              className="mt-1"
-              disabled
-            />
+            <Input type="text" value={createAt} className="mt-1" disabled />
           </div>
         )}
 
@@ -185,32 +179,60 @@ export default function RowItemForm() {
           {mode === "show" && fileUrls.length > 0 && (
             <div className="mt-2">
               {fileUrls.map((ur, index) => {
-                const url = `${import.meta.env.VITE_API_DOWNLOAD_URL}/storage/${ur}`
+                const url = `${
+                  import.meta.env.VITE_API_DOWNLOAD_URL
+                }/storage/${ur}`;
                 const fileType = getFileType(url);
                 return (
                   <div key={index} className="mb-2">
                     {fileType === "image" ? (
                       <div>
-                        <img src={url} alt={`File ${index + 1}`} className="max-w-xs max-h-40 object-cover" />
-                        <Link to={url} download className="text-blue-600 hover:underline">
+                        <img
+                          src={url}
+                          alt={`File ${index + 1}`}
+                          className="max-w-xs max-h-40 object-cover"
+                        />
+                        <Link
+                          to={url}
+                          download
+                          className="text-blue-600 hover:underline"
+                        >
                           Download Image {index + 1}
                         </Link>
                       </div>
                     ) : fileType === "pdf" ? (
                       <div>
-                        <Link to={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <Link
+                          to={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
                           View PDF {index + 1}
                         </Link>
-                        <Link to={url} download className="text-blue-600 hover:underline ml-2">
+                        <Link
+                          to={url}
+                          download
+                          className="text-blue-600 hover:underline ml-2"
+                        >
                           Download PDF {index + 1}
                         </Link>
                       </div>
                     ) : (
                       <div>
-                        <Link to={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <Link
+                          to={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
                           View File {index + 1}
                         </Link>
-                        <Link to={url} download className="text-blue-600 hover:underline ml-2">
+                        <Link
+                          to={url}
+                          download
+                          className="text-blue-600 hover:underline ml-2"
+                        >
                           Download File {index + 1}
                         </Link>
                       </div>
@@ -223,19 +245,14 @@ export default function RowItemForm() {
         </div>
 
         <div className="flex space-x-4">
-        {user.role === "owner" || user.role === "admin" && (
           <Button
             type={mode === "show" ? "button" : "submit"}
             className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
             onClick={() => mode === "show" && navigate(`/row/${id}/edit`)}
           >
-            {mode === "update"
-              ? "Update"
-              : mode === "show"
-              ? "Edit"
-              : "Create"}
+            {mode === "update" ? "Update" : mode === "show" ? "Edit" : "Create"}
           </Button>
-        )}
+
           <Button
             type="button"
             className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]"

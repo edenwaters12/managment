@@ -65,6 +65,7 @@ export default function DefaultLayout() {
               <Link to="/row" className="hover:underline">Row Items</Link>
               { (user.role === 'owner' || user.role === 'admin') &&(<>
               <Link to="/science" className="hover:underline">Data Science Lecturers</Link>
+              <Link to="/log" className="hover:underline">Log</Link>
               <Link to="/money" className="hover:underline">Money</Link>
               <Link to="/work" className="hover:underline">Work</Link>
               </>)}

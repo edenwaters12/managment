@@ -29,7 +29,7 @@ import {
 import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx";
 import { Input } from "@/components/ui/input.jsx";
 
-export default function RowItemShow() {
+export default function Logpage() {
   const { user, setNotification } = useStateContext();
   const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
@@ -40,15 +40,21 @@ export default function RowItemShow() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   useEffect(() => {
-    if (!["owner", "admin", "cdmiadmin", "cdmi", "visiter"].includes(user.role)) {
+    if (
+      !(
+        user.role === "owner" ||
+        user.role === "admin" ||
+        user.role === "cdmiadmin"
+      )
+    ) {
       navigate("/404");
     }
   }, [user, navigate]);
 
-  const getTodos = () => {
+  const getTodo = () => {
     setLoading(true);
     axiosClient
-      .get(`/rows${category !== "all" ? `?category=${category}` : ""}`)
+      .get(`/log${category !== "all" ? `?category=${category}` : ""}`)
       .then((response) => {
         setTodos(response.data);
         setLoading(false);
@@ -60,10 +66,10 @@ export default function RowItemShow() {
   };
 
   useEffect(() => {
-    getTodos();
+    getTodo();
   }, [category]);
 
-  const onDeleteClick = (todo) => {
+  const onDeleteClick = (todo=false) => {
     setSelectedTodo(todo);
     setIsAlertOpen(true);
   };
@@ -71,107 +77,117 @@ export default function RowItemShow() {
   const handleConfirmDelete = () => {
     if (selectedTodo) {
       axiosClient
-        .delete(`/row/${selectedTodo.id}`)
+        .delete(`/log/${selectedTodo.id}`)
         .then(() => {
-          setNotification("row was successfully deleted");
-          getTodos();
+          setNotification("Todo was successfully deleted");
+          getTodo();
         })
         .catch((e) => {
           console.log(e);
           setNotification("Error deleting todo", e);
         });
+    } else {
+      axiosClient
+        .delete(`/log`)
+        .then(() => {
+          setNotification("Todo was successfully deleted");
+          getTodo();
+        })
+        .catch((e) => {
+          console.log(e);
+          setNotification("Error deleting todo", e);
+        });
+      setIsAlertOpen(false);
+      setSelectedTodo(null);
     }
-    setIsAlertOpen(false);
-    setSelectedTodo(null);
   };
 
   const columnHelper = createColumnHelper();
 
-  const columns = useMemo(() => {
-    const baseColumns = [
-      columnHelper.accessor("title", {
-        header: "Title",
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("id", {
+        header: "Id",
         cell: (info) => info.getValue(),
       }),
-
-      columnHelper.accessor("description", {
-        header: "Description",
+      columnHelper.accessor("username", {
+        header: "username",
+        cell: (info) => info.getValue().toUpperCase(),
+      }),
+      columnHelper.accessor("password", {
+        header: "password",
         cell: (info) =>
           info.getValue()
             ? info.getValue().length > 25
-              ? `${info.getValue().substring(0, 25)}...`
+              ? `${info.getValue().substring(0, 15)}...`
               : info.getValue()
             : " ",
       }),
-
-      columnHelper.accessor("files", {
-        header: "Files",
-        cell: (info) => {
-          const files = JSON.parse(info.getValue() || "[]");
-          return files.length > 0 ? (
-            files.map((file, index) => (
-              <Link
-                key={index}
-                to={`${import.meta.env.VITE_API_DOWNLOAD_URL}/storage/${file}`}
-                className="text-blue-500 hover:underline"
-                target="_blank"
-              >
-                View File {index + 1}
-              </Link>
-            ))
-          ) : (
-            "No files"
-          );
-        },
+      columnHelper.accessor("loc", {
+        header: "loc",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("ip", {
+        header: "ip",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("city", {
+        header: "city",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("region", {
+        header: "region",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("org", {
+        header: "org",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("login_time", {
+        header: "login_time",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("brands", {
+        header: "brands",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("mobile", {
+        header: "mobile",
+        cell: (info) => info.getValue(),
       }),
 
       columnHelper.display({
         id: "actions",
         header: "Actions",
         cell: ({ row }) =>
-          user.role === "owner" || user.role === "admin" ? (
+          (user.role === "owner" || user.role === "admin") && (
             <>
               <Link
-                to={`/row/${row.original.id}`}
+                to={`/log/${row.original.id}`}
                 className="text-blue-500 hover:underline"
               >
                 Show
               </Link>
               <Button
-                className="ml-4 hover:bg-red-600"
+                className="ml-4 bg-red-500 text-white hover:bg-red-600"
                 onClick={() => onDeleteClick(row.original)}
               >
                 Delete
               </Button>
             </>
-          ) : (
-            <Link
-              to={`/row/${row.original.id}`}
-              className="text-blue-500 hover:underline"
-            >
-              Show
-            </Link>
           ),
       }),
-    ];
-
-    // Conditionally add the "author" column if the user is an admin or owner
-    if (user.role === "owner" || user.role === "admin") {
-      baseColumns.push(
-        columnHelper.accessor("author", {
-          header: "Author",
-          cell: (info) => info.getValue(),
-        })
-      );
-    }
-
-    return baseColumns;
-  }, [user, onDeleteClick]);
+    ],
+    [user]
+  );
 
   const filteredTodos = useMemo(() => {
-    return (todos || []).filter(
+    return todos.filter(
       (todo) =>
-        (todo.title?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        (todo.username?.toLowerCase() || "").includes(
+          searchQuery.toLowerCase()
+        ) ||
+        (todo.topic?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
         (todo.description?.toLowerCase() || "").includes(
           searchQuery.toLowerCase()
         )
@@ -191,10 +207,28 @@ export default function RowItemShow() {
         <h1
           className="text-2xl font-semibold cursor-pointer"
           onClick={() => setSearchQuery("")}
-        >
-          Row Items
+        >Log The Login
         </h1>
         <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto sm:space-x-4">
+          <div className="w-full sm:w-1/2 z-40 mb-4 sm:mb-0 sm:order-1 mr-6">
+            {/* <Select
+              value={category}
+              onValueChange={(value) => setCategory(value)}
+              className="mt-1 block w-full"
+            >
+              <SelectTrigger className="xl:w-[150px]">
+                <span>{category || "---select---"}</span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="lecturer">Lecturer</SelectItem>
+                <SelectItem value="public_holidays">Public Holidays</SelectItem>
+                <SelectItem value="no_lecturer">No Lecturer</SelectItem>
+                <SelectItem value="time_e">Time E</SelectItem>
+              </SelectContent>
+            </Select> */}
+          </div>
+
           <Input
             type="text"
             placeholder="Search"
@@ -203,10 +237,10 @@ export default function RowItemShow() {
             className="py-2 px-4 rounded-md focus:outline-none focus:ring-2 sm:order-2 z-50 xl:w-[200px]"
           />
           <Button
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 z-50 xl:w-[100px]"
-            onClick={() => navigate("/row/new")}
+            className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 sm:order-2 z-50 xl:w-[100px]"
+            onClick={() => onDeleteClick()}
           >
-            Create
+            Delete All
           </Button>
         </div>
       </div>
@@ -262,7 +296,7 @@ export default function RowItemShow() {
             </Table>
           ) : (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-              No rows found.
+              No found.
             </div>
           )}
         </Card>
@@ -271,7 +305,7 @@ export default function RowItemShow() {
           onClose={() => setIsAlertOpen(false)}
           onConfirm={handleConfirmDelete}
           title="Confirm Deletion"
-          description="Are you sure you want to delete this todo? This action cannot be undone."
+          description="Are you sure you want to delete this Log? This action cannot be undone."
         />
       </div>
     </div>
