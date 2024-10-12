@@ -3,6 +3,7 @@
 use App\Http\Controllers\RowItemController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\WorkController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\IpInfoController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
@@ -61,4 +62,9 @@ Route::get('/get-ipinfo', [IpInfoController::class, 'getIpInfo']);
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::get('auth/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
+Route::get('auth/google/token', [GoogleAuthController::class, 'getToken'])->middleware('auth');
 

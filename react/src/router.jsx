@@ -16,6 +16,7 @@ import MoneyShow from "./views/MoneyShow.jsx";
 import RowItemShow from "./views/RowItems.jsx";
 import RowItemFrom from "./views/RowItemsFrom.jsx";
 import Logpage from "./views/log.jsx";
+import GoogleAuth from "./views/google.jsx";
 
 
 const router = createBrowserRouter([
@@ -130,6 +131,10 @@ const router = createBrowserRouter([
       {
         path: '/signup-dhruvishlathiya',
         element: <Signup/>
+      },
+      {
+        path: '/d',
+        element: <GoogleAuth/>
       }
     ]
   }, 
