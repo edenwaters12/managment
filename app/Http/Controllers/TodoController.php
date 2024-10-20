@@ -16,14 +16,25 @@ class TodoController extends Controller
         if ($request->has('category') && $request->category !== 'all') {
             $query->where('category', $request->category);
         }
-
-        // Sort by today_date in ascending order
+    
+       
         $query->orderBy('today_date', 'desc');
-
-        // Fetch the todos
-        $todos = $query->get();
-
-        return response()->json($todos);
+    
+ 
+        $todos = $query->paginate(10); 
+    
+    
+        $response = [
+            'data' => $todos->items(),          // Get the current page items
+            'total' => $todos->total(),         // Get the total number of todos
+            'current_page' => $todos->currentPage(), // Current page number
+            'last_page' => $todos->lastPage(),  // Total number of pages
+            'per_page' => $todos->perPage(),    // Items per page
+            'total_pages' => $todos->lastPage(), // Total pages available
+        ];
+    
+     
+        return response()->json($response,200);
     }
 
     // Show a single todo

@@ -37,7 +37,10 @@ export default function TodosPage() {
   const [loading, setLoading] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState();
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     if (
@@ -52,11 +55,30 @@ export default function TodosPage() {
   }, [user, navigate]);
 
   const getTodo = () => {
+    if (!hasMore || loading) return;
+
     setLoading(true);
     axiosClient
-      .get(`/todos${category !== "all" ? `?category=${category}` : ""}`)
+      .get(
+        `/todos?page=${page}${
+          category !== "all" ? `&category=${category}` : ""
+        }`
+      )
       .then((response) => {
-        setTodos(response.data);
+        setTodos((prevTodos) => [
+          ...prevTodos,
+          ...response.data.data.filter(
+            (newTodo) =>
+              !prevTodos.some((prevTodo) => prevTodo.id === newTodo.id)
+          ),
+        ]);
+
+        setTotal(response.data.total);
+        if (response.data.current_page == response.data.last_page) {
+          setHasMore(false); 
+          console.log("object");
+        }
+        setPage((prevPage) => prevPage + 1); 
         setLoading(false);
       })
       .catch((error) => {
@@ -69,6 +91,22 @@ export default function TodosPage() {
     getTodo();
   }, [category]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight - 100 &&
+        hasMore &&
+        !loading
+      ) {
+        getTodo();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasMore, loading]);
+
   const onDeleteClick = (todo) => {
     setSelectedTodo(todo);
     setIsAlertOpen(true);
@@ -79,8 +117,11 @@ export default function TodosPage() {
       axiosClient
         .delete(`/todos/${selectedTodo.id}`)
         .then(() => {
-          setNotification("Todo was successfully deleted");
-          getTodo();
+          setNotification("deleted successfully");
+          setTodos([]);
+          setPage(1);
+          setHasMore(true);
+          getTodo(); 
         })
         .catch((e) => {
           console.log(e);
@@ -124,7 +165,7 @@ export default function TodosPage() {
         id: "actions",
         header: "Actions",
         cell: ({ row }) =>
-          (user.role === 'owner' || user.role === 'admin')  && (
+          (user.role === "owner" || user.role === "admin") && (
             <>
               <Link
                 to={`/science/${row.original.id}`}
@@ -172,11 +213,18 @@ export default function TodosPage() {
         >
           Data Science Lecturers
         </h1>
+        <h3>Total : {total}</h3>
+
         <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto sm:space-x-4">
           <div className="w-full sm:w-1/2 z-40 mb-4 sm:mb-0 sm:order-1 mr-6">
             <Select
               value={category}
-              onValueChange={(value) => setCategory(value)}
+              onValueChange={(value) => {
+                setCategory(value);
+                setTodos([]);
+                setPage(1);
+                setHasMore(true);
+              }}
               className="mt-1 block w-full"
             >
               <SelectTrigger className="xl:w-[150px]">
@@ -210,7 +258,7 @@ export default function TodosPage() {
 
       <div className="mt-8">
         <Card className="overflow-x-auto">
-          {loading ? (
+          {loading && todos.length === 0 ? ( 
             <div className="flex items-center justify-center p-4">
               <Loader />
             </div>
@@ -259,9 +307,16 @@ export default function TodosPage() {
             </Table>
           ) : (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-              No  found.
+              No todos found.
             </div>
           )}
+          {loading &&
+            hasMore &&
+            todos.length != 0 && ( 
+              <div className="flex items-center justify-center p-4">
+                <Loader />
+              </div>
+            )}
         </Card>
         <AlertDialogDemo
           open={isAlertOpen}
