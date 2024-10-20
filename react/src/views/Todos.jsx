@@ -76,7 +76,6 @@ export default function TodosPage() {
         setTotal(response.data.total);
         if (response.data.current_page == response.data.last_page) {
           setHasMore(false); 
-          console.log("object");
         }
         setPage((prevPage) => prevPage + 1); 
         setLoading(false);
