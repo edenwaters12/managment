@@ -13,7 +13,8 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useStateContext } from "@/context/ContextProvider.jsx";
 
 export default function workForm() {
-  const { user } = useStateContext();
+  const { user, setNotification,notification } = useStateContext();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,7 +57,8 @@ export default function workForm() {
             setEnd_time(formatTime(data.end_time) || "14:00");
             setCategory(data.category || "Collage");
           })
-          .catch(() => {
+          .catch((e) => {
+            setNotification(e);
             setLoading(false);
           });
       }
@@ -75,7 +77,8 @@ export default function workForm() {
             setEnd_time(formatTime(data.end_time) || "14:00");
             setCategory(data.category || "Collage");
           })
-          .catch(() => {
+          .catch((e) => {
+            setNotification(e);
             setLoading(false);
           });
       }
@@ -99,16 +102,18 @@ export default function workForm() {
 
     method(endpoint, workData)
       .then(() => navigate("/work"))
-      .catch((error) =>
+      .catch((error) =>{
+        setNotification(error);
         console.error(
           mode === "update" ? "Error updating work" : "Error creating work",
           error
-        )
+        )}
       );
   };
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
+      {loading ? <Loader /> : (
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
@@ -218,7 +223,13 @@ export default function workForm() {
             Go To Home
           </Button>
         </div>
-      </form>
+      </form> 
+      )}
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

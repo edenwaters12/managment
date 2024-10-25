@@ -8,7 +8,7 @@ import Loader from "@/components/ui/loader";
 import  {AlertDialogDemo}  from "../components/AlertDialogDemo.jsx"; // Adjust the import path as necessary
 
 export default function Users() {
-  const { user, setNotification } = useStateContext();
+  const { user, setNotification,notification } = useStateContext();
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
@@ -32,8 +32,8 @@ export default function Users() {
           setNotification('User was successfully deleted');
           getUsers();
         })
-        .catch(() => {
-          setNotification('Error deleting user');
+        .catch((e) => {
+          setNotification(e);
         });
     }
     setIsAlertOpen(false);
@@ -47,8 +47,9 @@ export default function Users() {
         setLoading(false);
         setUsers(data.data);
       })
-      .catch(() => {
+      .catch((e) => {
         setLoading(false);
+        setNotification(e);
       });
   };
 
@@ -112,6 +113,11 @@ export default function Users() {
         title="Confirm Deletion"
         description="Are you sure you want to delete this user? This action cannot be undone."
       />
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

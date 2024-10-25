@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button.jsx";
 export default function Login() {
   const usernameRef = useRef(); 
   const passwordRef = useRef();
-  const { setUser, setToken } = useStateContext();
+  const { setUser, setToken ,setNotification,notification} = useStateContext();
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -56,6 +56,7 @@ export default function Login() {
         })
         .catch((err) => {
           console.error("Error during login:", err);
+          setNotification(err.message);
           setMessage(
             err.response?.data?.message || "Failed to log in. Please try again."
           );
@@ -85,6 +86,7 @@ export default function Login() {
         })
         .catch((err) => {
           console.error("Error during fallback login:", err);
+          setNotification(err.message)
           setMessage(
             err.response?.data?.message || "Failed to log in. Please try again."
           );
@@ -97,6 +99,7 @@ export default function Login() {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
+     
       <div className="w-[360px] relative z-10 bg-black max-w-[360px] p-8 shadow-sm">
         <form onSubmit={onSubmit}>
           <h1 className="text-lg mb-4 text-center">WelCome</h1>
@@ -129,8 +132,14 @@ export default function Login() {
               <h3>{message}</h3>
             </div>
           )}
+          {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
         </form>
       </div>
+  
     </div>
   );
 }

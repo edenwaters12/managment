@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/Textarea.jsx";
 import { useStateContext } from "@/context/ContextProvider.jsx";
 
 export default function MoneyShow() {
-  const { user } = useStateContext();
+  const { user, setNotification,notification } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +35,7 @@ export default function MoneyShow() {
       })
       .catch((err) => {
         setLoading(false);
+        setNotification(err);
         setError("Error fetching data");
       });
   };
@@ -111,6 +112,11 @@ export default function MoneyShow() {
           </div>
         )}
       </Card>
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

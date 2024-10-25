@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/select.jsx";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useStateContext } from "@/context/ContextProvider.jsx";
+import Loader from "@/components/ui/loader";
 
 export default function TodoForm() {
-  const { user } = useStateContext();
+  const { user, setNotification,notification } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function TodoForm() {
   const [category, setCategory] = useState("lecturer");
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
+  const [btnload, setBtnload] = useState(false);
   const [mode, setMode] = useState("create"); // Track form mode
   const { id } = useParams();
   const location = useLocation();
@@ -57,7 +59,7 @@ export default function TodoForm() {
             setCategory(data.category || "lecturer");
             setTopic(data.topic || "");
           })
-          .catch(() => {
+          .catch((e) => {
             setLoading(false);
           });
       }
@@ -85,6 +87,7 @@ export default function TodoForm() {
   }, [pathname, id]);
 
   const handleSubmit = (e) => {
+    setBtnload(true);
     e.preventDefault();
     let todoData = {
       title,
@@ -107,11 +110,19 @@ export default function TodoForm() {
           mode === "update" ? "Error updating todo" : "Error creating todo",
           error
         )
-      );
+      ).finally(() => {
+        setBtnload(false);
+      })
   };
 
   return (
+    
     <div className="p-4 max-w-6xl mx-auto">
+      {loading && btnload ? ( 
+            <div className="flex items-center justify-center p-4">
+              <Loader />
+            </div>
+          ):(
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
@@ -231,13 +242,19 @@ export default function TodoForm() {
               type={mode === "show" ? "button" : "submit"}
               className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
               onClick={() => mode === "show" && navigate(`/science/${id}/edit`)}
+              disabled={btnload}
             >
-              {mode === "update"
-                ? "Update Todo"
-                : mode == "show"
-                ? "Edit"
-                : "Create Todo"}
+              {btnload ? (
+                "Loading..."
+              ) : (
+                <>
+                  {mode === "update" && "Update "}
+                  {mode === "show" && "Edit"}
+                  {mode === "create" && "Create "}
+                </>
+              )}
             </Button>
+
           )}
           <Button
             type="button"
@@ -248,6 +265,12 @@ export default function TodoForm() {
           </Button>
         </div>
       </form>
+      )}
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

@@ -18,7 +18,7 @@ import { useStateContext } from "../context/ContextProvider.jsx";
 
 
 export default function MoneyForm() {
-  const { user, setNotification } = useStateContext();
+  const { user, setNotification,notification } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => { 
@@ -88,7 +88,7 @@ export default function MoneyForm() {
       const response = err.response;
       if (response && response.status === 422) {
         setErrors(response.data.errors);
-        setNotification("Failed to save data");
+        setNotification(err);
       }
     }
   };
@@ -371,7 +371,11 @@ export default function MoneyForm() {
         onConfirm={() => window.location.reload()}
         description="Failed to fetch data. Please try again or go to the home page."
       />
-      
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

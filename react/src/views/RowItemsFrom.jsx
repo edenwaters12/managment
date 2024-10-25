@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button.jsx";
 import { Input } from "@/components/ui/Input.jsx";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useStateContext } from "@/context/ContextProvider.jsx";
+import Loader from "@/components/ui/Loader.jsx";
 
 export default function RowItemForm() {
-  const { user } = useStateContext();
+  const { user, setNotification,notification } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,8 +70,9 @@ export default function RowItemForm() {
             setFileUrls(parsedFiles.map((file) => file.replace(/\\/, "/"))); // Normalize paths
           }
         })
-        .catch(() => {
+        .catch((err) => {
           setLoading(false);
+          setNotification(err)
         });
     }
   }, [pathname, id]);
@@ -101,13 +103,15 @@ export default function RowItemForm() {
       },
     })
       .then(() => navigate("/row"))
-      .catch((error) =>
+      .catch((error) => {
+        setNotification(error);
         console.error(
           mode === "update"
-            ? "Error updating Row Items"
-            : "Error creating Row Items",
+          ? "Error updating Row Items"
+          : "Error creating Row Items",
           error
         )
+      }
       );
   };
 
@@ -123,6 +127,7 @@ export default function RowItemForm() {
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
+      {loading ? <Loader /> : (
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
@@ -262,6 +267,12 @@ export default function RowItemForm() {
           </Button>
         </div>
       </form>
+      )}
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

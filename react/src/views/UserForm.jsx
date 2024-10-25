@@ -28,7 +28,7 @@ export default function UserForm() {
   const [errors, setErrors] = useState({});
   const [category, setCategory] = useState('null');
   const [loading, setLoading] = useState(false);
-  const { setNotification } = useStateContext();
+  const { setNotification,notification } = useStateContext();
 
   useEffect(() => {
     if (id) {
@@ -40,8 +40,9 @@ export default function UserForm() {
           setUser(data);
           setCategory(data.role);
         })
-        .catch(() => {
+        .catch((err) => {
           setLoading(false);
+          setNotification(err);
         });
     }
   }, [id]);
@@ -70,6 +71,7 @@ export default function UserForm() {
       })
       .catch((err) => {
         setLoading(false);
+        setNotification(err);
         const response = err.response;
         if (response && response.status === 422) {
           setErrors(response.data.errors);
@@ -178,6 +180,11 @@ export default function UserForm() {
           </form>
         )}
       </Card>
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

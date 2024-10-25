@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/table";
 
 export default function workShow() {
-  const { user,setNotification } = useStateContext();
+  const { user, setNotification,notification } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +43,7 @@ export default function workShow() {
         setLoading(false);
       })
       .catch((error) => {
+        setNotification(error);
         console.error("Error fetching works", error);
         setLoading(false);
       });
@@ -68,6 +69,7 @@ export default function workShow() {
         })
         .catch((e) => {
           console.log(e);
+          setNotification(e);
           setNotification("Error deleting Work", e);
         });
     }
@@ -181,6 +183,11 @@ export default function workShow() {
           description="Are you sure you want to delete this work? This action cannot be undone."
         />
       </div>
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

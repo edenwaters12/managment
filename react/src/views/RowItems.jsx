@@ -30,7 +30,7 @@ import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx";
 import { Input } from "@/components/ui/input.jsx";
 
 export default function RowItemShow() {
-  const { user, setNotification } = useStateContext();
+  const { user, setNotification,notification } = useStateContext();
   const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
   const [category, setCategory] = useState("all");
@@ -55,6 +55,7 @@ export default function RowItemShow() {
       })
       .catch((error) => {
         console.error("Error fetching todos", error);
+        setNotification(error);
         setLoading(false);
       });
   };
@@ -274,6 +275,11 @@ export default function RowItemShow() {
           description="Are you sure you want to delete this todo? This action cannot be undone."
         />
       </div>
+      {notification &&
+        <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+          {notification}
+        </div>
+      }
     </div>
   );
 }

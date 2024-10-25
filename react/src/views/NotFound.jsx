@@ -16,6 +16,8 @@ const NotFoundPage = () => {
         setUser({});
         setToken(null);
         setNotification('Logout............')
+      }).catch((err) => {
+        setNotification(err);
       });
   }, [token]);
   return (
