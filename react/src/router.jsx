@@ -1,155 +1,307 @@
-import {createBrowserRouter, Navigate} from "react-router-dom";
-import Dashboard from "./views/Dashboard.jsx";
+// src/router.jsx
+
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import DefaultLayout from "./components/DefaultLayout";
 import GuestLayout from "./components/GuestLayout";
-import Login from "./views/Login";
-import NotFound from "./views/NotFound";
-import Signup from "./views/Signup";
-import Users from "./views/Users";
-import UserForm from "./views/UserForm";
-import Todos from "./views/Todos.jsx";
-import TodoForm from "./views/TodoForm.jsx";
-import WorkShow from "./views/WorkShow.jsx";
-import WorkForm from "./views/WorkForm.jsx";
-import MoneyForm from "./views/MoneyForm.jsx";
-import MoneyShow from "./views/MoneyShow.jsx";
-import RowItemShow from "./views/RowItems.jsx";
-import RowItemFrom from "./views/RowItemsFrom.jsx";
-import Logpage from "./views/log.jsx";
-import GooglePhotosViewer from "./views/GooglePhotosViewer.jsx";
+import ErrorBoundary from "./components/ErrorBoundary"; // Import your ErrorBoundary
+import React, { Suspense } from "react";
 
+// Lazy loading components
+const Dashboard = React.lazy(() => import("./views/Dashboard.jsx"));
+const Login = React.lazy(() => import("./views/Login"));
+const NotFound = React.lazy(() => import("./views/NotFound"));
+const Signup = React.lazy(() => import("./views/Signup"));
+const Users = React.lazy(() => import("./views/Users"));
+const UserForm = React.lazy(() => import("./views/UserForm"));
+const Todos = React.lazy(() => import("./views/Todos.jsx"));
+const TodoForm = React.lazy(() => import("./views/TodoForm.jsx"));
+const WorkShow = React.lazy(() => import("./views/WorkShow.jsx"));
+const WorkForm = React.lazy(() => import("./views/WorkForm.jsx"));
+const MoneyForm = React.lazy(() => import("./views/MoneyForm.jsx"));
+const MoneyShow = React.lazy(() => import("./views/MoneyShow.jsx"));
+const RowItemShow = React.lazy(() => import("./views/RowItems.jsx"));
+const RowItemFrom = React.lazy(() => import("./views/RowItemsFrom.jsx"));
+const Logpage = React.lazy(() => import("./views/log.jsx"));
+const GooglePhotosViewer = React.lazy(() => import("./views/GooglePhotosViewer.jsx"));
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <DefaultLayout/>,
+    element: <DefaultLayout />,
     children: [
       {
         path: '/',
-        element: <Navigate to="/dashboard"/>
+        element: <Navigate to="/dashboard" />
       },
       {
         path: '/dashboard',
-        element: <Dashboard/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Dashboard />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/users',
-        element: <Users/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Users />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/users/new',
-        element: <UserForm key="userCreate" />
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <UserForm key="userCreate" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/users/:id',
-        element: <UserForm key="userUpdate" />
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <UserForm key="userUpdate" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
-      // data science leatucter details
       {
         path: '/science',
-        element: <Todos/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Todos />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/science/:id/edit',
-        element: <TodoForm key="Todoupdate"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <TodoForm key="Todoupdate" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/science/:id',
-        element: <TodoForm key="showDetails"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <TodoForm key="showDetails" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/science/new',
-        element: <TodoForm key="TodoCreate"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <TodoForm key="TodoCreate" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
-
-      // Work Details
       {
         path: '/work',
-        element: <WorkShow/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <WorkShow />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/work/:id/edit',
-        element: <WorkForm key="workUpdate"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <WorkForm key="workUpdate" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/work/:id',
-        element: <WorkForm key="workshow"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <WorkForm key="workShow" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/work/new',
-        element: <WorkForm key="workcrete"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <WorkForm key="workCreate" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/log',
-        element: <Logpage key="log"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Logpage key="log" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/log/:id',
-        element: <Logpage key="log"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Logpage key="log" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
-
       {
         path: '/money',
-        element: <MoneyShow key="showmonery" />
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <MoneyShow key="showMoney" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/money/:id',
-        element: <MoneyForm key="editmoney" />
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <MoneyForm key="editMoney" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/money/new',
-        element: <MoneyForm key="editmoney" />
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <MoneyForm key="editMoney" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
-      // row items
       {
         path: '/row',
-        element: <RowItemShow key="rowitems" />
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <RowItemShow key="rowItems" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/row/:id/edit',
-        element: <RowItemFrom key="rowEdit"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <RowItemFrom key="rowEdit" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/row/:id',
-        element: <RowItemFrom key="rowDetail"/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <RowItemFrom key="rowDetail" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/row/new',
-        element: <RowItemFrom key="rowCreate"/>
-      },
-      {
-        path: "/google-photos",
-        element: <GooglePhotosViewer />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <RowItemFrom key="rowCreate" />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
 
     ]
   },
   {
     path: '/',
-    element: <GuestLayout/>,
+    element: <GuestLayout />,
     children: [
       {
         path: '/login',
-        element: <Login/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Login />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: '/signup-dhruvishlathiya',
-        element: <Signup/>
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Signup />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       }
     ]
-  }, 
+  },
   {
-    path: "/google-image",
-    element: <GooglePhotosViewer />,
+    path: "/google-photos",
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ErrorBoundary>
+          <GooglePhotosViewer />
+        </ErrorBoundary>
+      </Suspense>
+    ),
   },
   {
     path: "/404",
-    element: <NotFound />,
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ErrorBoundary>
+          <NotFound />
+        </ErrorBoundary>
+      </Suspense>
+    ),
   },
   {
     path: "*",
-    element: <NotFound/>
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ErrorBoundary>
+          <NotFound />
+        </ErrorBoundary>
+      </Suspense>
+    ),
   }
-])
+]);
 
 export default router;
