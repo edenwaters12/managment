@@ -16,6 +16,7 @@ import MoneyShow from "./views/MoneyShow.jsx";
 import RowItemShow from "./views/RowItems.jsx";
 import RowItemFrom from "./views/RowItemsFrom.jsx";
 import Logpage from "./views/log.jsx";
+import GooglePhotosViewer from "./views/GooglePhotosViewer.jsx";
 
 
 const router = createBrowserRouter([
@@ -116,6 +117,10 @@ const router = createBrowserRouter([
         path: '/row/new',
         element: <RowItemFrom key="rowCreate"/>
       },
+      {
+        path: "/google-photos",
+        element: <GooglePhotosViewer />,
+      },
 
     ]
   },
@@ -133,6 +138,10 @@ const router = createBrowserRouter([
       }
     ]
   }, 
+  {
+    path: "/google-image",
+    element: <GooglePhotosViewer />,
+  },
   {
     path: "/404",
     element: <NotFound />,
