@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/Input.jsx";
 import Loader from "@/components/ui/loader.jsx";
 import axiosClient from "@/axios-client.js";
 import { useStateContext } from "@/context/ContextProvider";
+import { ArrowLeft, ArrowRight, X } from "lucide-react";
 
 Modal.setAppElement("#root"); // Important for accessibility
 
@@ -77,7 +78,7 @@ const GooglePhotosFetch = () => {
       setAllPhotos((prevPhotos) => [...prevPhotos, ...(data.mediaItems || [])]);
       setNextPageToken(data.nextPageToken); // Update nextPageToken for pagination
     } catch (error) {
-        setNotification(error.message);
+      setNotification(error.message);
     } finally {
       setInitialLoading(false); // Hide loader after initial load
       setInfiniteLoading(false); // Hide infinite scroll loader
@@ -138,42 +139,42 @@ const GooglePhotosFetch = () => {
     e.preventDefault();
     setLoading(true);
     setInitialLoading(true);
-  
+
     const payload = {
-        client_id:CLIENT_ID,
-        client_secret:CLIENT_SECRET,
-        refresh_token:REFRESH_TOKEN,
-        author:user || ' '
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      refresh_token: REFRESH_TOKEN,
+      author: user || " ",
     };
 
     // Check if save query parameter is available
-    const saveQuery = new URLSearchParams(window.location.search).get('save');
+    const saveQuery = new URLSearchParams(window.location.search).get("save");
 
     axiosClient
-        .post("/google-photos", payload)
-        .then(async () => {
-            setInitialLoading(false);
-            setFormdata(false); // Hide the form after submission
-            setNotification('Start the data Fetching');
-            await handleFetchPhotos(); // Fetch photos after form submission
-        })
-        .catch(async (err) => {
-            setNotification(err.message);
-            if (saveQuery) { // Change here to check for the save query
-                setNotification('Start the data Fetching');
-                setFormdata(false); // Hide the form after submission
-                await handleFetchPhotos(); // Fetch photos after form submission
-            }
-        })
-        .finally(() => {
-            setInitialLoading(false);
-            setLoading(false);
-            setCLIENT_ID('')
-            setCLIENT_SECRET('')
-            setREFRESH_TOKEN('')
-        });
-};
-
+      .post("/google-photos", payload)
+      .then(async () => {
+        setInitialLoading(false);
+        setFormdata(false); // Hide the form after submission
+        setNotification("Start the data Fetching");
+        await handleFetchPhotos(); // Fetch photos after form submission
+      })
+      .catch(async (err) => {
+        setNotification(err.message);
+        if (saveQuery) {
+          // Change here to check for the save query
+          setNotification("Start the data Fetching");
+          setFormdata(false); // Hide the form after submission
+          await handleFetchPhotos(); // Fetch photos after form submission
+        }
+      })
+      .finally(() => {
+        setInitialLoading(false);
+        setLoading(false);
+        setCLIENT_ID("");
+        setCLIENT_SECRET("");
+        setREFRESH_TOKEN("");
+      });
+  };
 
   // Infinite scrolling functionality
   useEffect(() => {
@@ -287,8 +288,7 @@ const GooglePhotosFetch = () => {
               ))}
             </div>
           )}
-          <div ref={observerRef} className="h-5 mb-5" />{" "}
-          {/* Empty div for the observer */}
+          <div ref={observerRef} className="h-5 mb-5" />
           {infiniteLoading && !showFullscreen && (
             <div className="flex items-center justify-center p-4">
               <Loader /> {/* Smaller loader for infinite scroll */}
@@ -296,24 +296,30 @@ const GooglePhotosFetch = () => {
           )}
           {showFullscreen && (
             <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 flex justify-center items-center z-50">
-              <Button
+              <X
+                size={80}
+                color="#5384a2"
+                strokeWidth={2.75}
                 onClick={closeFullScreen}
-                className="absolute top-5 right-5 bg-opacity-50 rounded px-4 py-2"
-              >
-                Close
-              </Button>
-              <Button
+                className="absolute top-5 right-5 bg-opacity-50 rounded px-4 py-2 cursor-pointer"
+              />
+
+              <ArrowLeft
+                size={80}
+                color="#5384a2"
+                strokeWidth={2.75}
                 onClick={handlePrevImage}
-                className="absolute left-5 rounded px-4 py-2"
-              >
-                Previous
-              </Button>
-              <Button
+                className="absolute left-5 rounded px-4 py-2 cursor-pointer "
+              />
+
+              <ArrowRight
+                size={80}
+                color="#5384a2"
+                strokeWidth={2.75}
                 onClick={handleNextImage}
-                className="absolute right-5 bg-opacity-50 rounded px-4 py-2"
-              >
-                Next
-              </Button>
+                className="absolute right-5 bg-opacity-50 rounded px-4 py-2 cursor-pointer"
+              />
+
               <img
                 src={fullscreenImg}
                 alt="Full Screen"
@@ -323,11 +329,11 @@ const GooglePhotosFetch = () => {
           )}
         </div>
       )}
-    {notification &&
+      {notification && (
         <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
           {notification}
         </div>
-      }
+      )}
     </div>
   );
 };
