@@ -10,29 +10,36 @@ import { ArrowLeft, ArrowRight, X } from "lucide-react";
 Modal.setAppElement("#root"); // Important for accessibility
 
 const GooglePhotosFetch = () => {
-  const { user,setNotification,notification } = useStateContext();
+  const { user, setNotification, notification } = useStateContext();
   const [allPhotos, setAllPhotos] = useState([]); // Store all fetched photos
   const [nextPageToken, setNextPageToken] = useState(null); // Track the next page token
   const [fullscreenImg, setFullscreenImg] = useState(""); // Store image for full screen
   const [showFullscreen, setShowFullscreen] = useState(false); // State to toggle full screen
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Current image index
-  const [CLIENT_ID, setCLIENT_ID] = useState("");
-  const [CLIENT_SECRET, setCLIENT_SECRET] = useState("");
-  const [REFRESH_TOKEN, setREFRESH_TOKEN] = useState("");
   const [formdata, setFormdata] = useState(true);
   const [accessToken, setAccessToken] = useState(null); // Store access token
   const [initialLoading, setInitialLoading] = useState(false); // Loading state for initial data load
   const [infiniteLoading, setInfiniteLoading] = useState(false); // Loading state for infinite scroll
   const observerRef = useRef(); // Ref for the observer
   const [loading, setLoading] = useState(false);
+  const [credentials, setCredentials] = useState({
+    client_id: "",
+    client_secret: "",
+    refresh_token: "",
+  });
+
+  const handleChange = (e) =>
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
 
   const getAccessToken = async (refreshToken) => {
+    const { client_id, client_secret, refresh_token } = credentials;
     const url = "https://oauth2.googleapis.com/token";
-    const params = new URLSearchParams();
-    params.append("client_id", CLIENT_ID);
-    params.append("client_secret", CLIENT_SECRET);
-    params.append("refresh_token", refreshToken);
-    params.append("grant_type", "refresh_token");
+    const params = new URLSearchParams({
+      client_id: client_id,
+      client_secret: client_secret,
+      refresh_token: refresh_token,
+      grant_type: "refresh_token",
+    });
 
     const response = await fetch(url, {
       method: "POST",
@@ -43,6 +50,7 @@ const GooglePhotosFetch = () => {
     });
 
     if (!response.ok) {
+      formdata(true)
       throw new Error("Failed to get access token: " + response.statusText);
     }
 
@@ -51,7 +59,7 @@ const GooglePhotosFetch = () => {
   };
 
   const fetchPhotos = async (pageToken, isInitialLoad = false) => {
-    setNotification('new data Fetching');
+    setNotification("new data Fetching");
     if (!accessToken) return;
 
     if (isInitialLoad) {
@@ -89,7 +97,7 @@ const GooglePhotosFetch = () => {
     try {
       setAllPhotos([]); // Clear photos before fetching new ones
       if (!accessToken) {
-        const newAccessToken = await getAccessToken(REFRESH_TOKEN);
+        const newAccessToken = await getAccessToken(credentials.refresh_token);
         setAccessToken(newAccessToken);
       } else {
         await fetchPhotos("", true); // Fetch initial set of photos
@@ -140,18 +148,13 @@ const GooglePhotosFetch = () => {
     setLoading(true);
     setInitialLoading(true);
 
-    const payload = {
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
-      refresh_token: REFRESH_TOKEN,
-      author: user || " ",
-    };
-
     // Check if save query parameter is available
     const saveQuery = new URLSearchParams(window.location.search).get("save");
 
     axiosClient
-      .post("/google-photos", payload)
+      .post("/google-photos", {
+        ...credentials,
+      })
       .then(async () => {
         setInitialLoading(false);
         setFormdata(false); // Hide the form after submission
@@ -170,9 +173,6 @@ const GooglePhotosFetch = () => {
       .finally(() => {
         setInitialLoading(false);
         setLoading(false);
-        setCLIENT_ID("");
-        setCLIENT_SECRET("");
-        setREFRESH_TOKEN("");
       });
   };
 
@@ -219,44 +219,21 @@ const GooglePhotosFetch = () => {
       </h1>
       {formdata ? (
         <form onSubmit={handleSubmit} className="p-4 max-w-6xl mx-auto mt-4">
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300">
-              CLIENT_ID
-            </label>
-            <Input
-              type="text"
-              value={CLIENT_ID}
-              onChange={(e) => setCLIENT_ID(e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300">
-              CLIENT_SECRET
-            </label>
-            <Input
-              type="text"
-              value={CLIENT_SECRET}
-              onChange={(e) => setCLIENT_SECRET(e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300">
-              REFRESH_TOKEN
-            </label>
-            <Input
-              type="text"
-              value={REFRESH_TOKEN}
-              onChange={(e) => setREFRESH_TOKEN(e.target.value)}
-              className="mt-1"
-              required
-            />
-          </div>
+          {["client_id", "client_secret", "refresh_token"].map((field) => (
+            <div key={field} className="mb-4">
+              <label className="block text-sm font-medium text-gray-300">
+                {field}
+              </label>
+              <Input
+                type="text"
+                name={field}
+                value={credentials[field]}
+                onChange={handleChange}
+                className="mt-1"
+                required
+              />
+            </div>
+          ))}
           <Button
             type="submit"
             disabled={loading}
