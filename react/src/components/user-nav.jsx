@@ -11,10 +11,12 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { signOut, useSession } from 'next-auth/react';
+import { useStateContext } from '@/context/ContextProvider';
+// import { signOut, useSession } from 'next-auth/react';
 
 export function UserNav() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const {user} = useStateContext()
 
   if (session) {
     return (

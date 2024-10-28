@@ -43,14 +43,15 @@ import {
   GalleryVerticalEnd,
   LogOut
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth'; // Custom hook for auth management
+// import { useAuth } from '@/hooks/useAuth'; // Custom hook for auth management
 import { useLocation, Link } from 'react-router-dom';
 import * as React from 'react';
 // import { Breadcrumbs } from '../breadcrumbs';
 import { Icons } from './icons';
 import SearchInput from './search-input';
-import ModeToggle from './mode-toggle';
+import {ModeToggle} from './mode-toggle.jsx';
 import { UserNav } from './user-nav';
+import { useStateContext } from '@/context/ContextProvider';
 
 export const company = {
   name: 'Acme Inc',
@@ -60,7 +61,8 @@ export const company = {
 
 export default function AppSidebar({ children }) {
   const [mounted, setMounted] = React.useState(false);
-  const { user, logout } = useAuth(); // Assume this hook provides user data and logout function
+  const { user, logout } = useStateContext(); // Assume this hook provides user data and logout function
+  
   const location = useLocation();
 
   // Only render after first client-side mount
