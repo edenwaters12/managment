@@ -4,6 +4,7 @@ use App\Http\Controllers\RowItemController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\WorkController;
 use App\Http\Controllers\IpInfoController;
+use App\Http\Controllers\GooglePhotoController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -54,6 +55,9 @@ Route::middleware(['auth:sanctum', 'auto.logout'])->group(function () {
     Route::get('/log', [IpInfoController::class, 'index']);
     Route::delete('/log/{id?}', [IpInfoController::class, 'delete']);
     
+    Route::get('/google-photos', [GooglePhotoController::class, 'index']);
+    Route::get('/google-photos/{id}', [GooglePhotoController::class, 'show']);
+    Route::put('/google-photos/{id}', [GooglePhotoController::class, 'update']);
     
     
 });
@@ -61,4 +65,7 @@ Route::get('/get-ipinfo', [IpInfoController::class, 'getIpInfo']);
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// store the details like the google info is not protectd
+Route::post('/google-photos', [GooglePhotoController::class, 'store']);
 
