@@ -33,7 +33,7 @@ export const ContextProvider = ({ children }) => {
 
     setTimeout(() => {
       _setNotification('');
-    }, 2000);
+    }, 3500);
   };
 
   useEffect(() => {
