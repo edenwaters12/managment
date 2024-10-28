@@ -9,34 +9,32 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuRadioGroup,
 } from "./ui/dropdown-menu.jsx"; // Adjust the path as necessary
-import { Menu, X } from "lucide-react"; // For icons
+import { LogOut, Menu, X } from "lucide-react"; // For icons
 
 export default function DefaultLayout() {
   const { user, token, setUser, setToken, notification } = useStateContext();
-  const [darkMode, setDarkMode] = useState('dark'); // Default dark mode
+  const [darkMode, setDarkMode] = useState("dark"); // Default dark mode
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!token) return;
 
-    axiosClient.get('/user')
-      .then(({ data }) => {
-        setUser(data);
-      });
+    axiosClient.get("/user").then(({ data }) => {
+      setUser(data);
+    });
   }, [token]);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode === 'dark');
+    document.documentElement.classList.toggle("dark", darkMode === "dark");
   }, [darkMode]);
 
-  const onLogout = ev => {
+  const onLogout = (ev) => {
     ev.preventDefault();
 
-    axiosClient.post('/logout')
-      .then(() => {
-        setUser({});
-        setToken(null);
-      });
+    axiosClient.post("/logout").then(() => {
+      setUser({});
+      setToken(null);
+    });
   };
 
   const toggleMenu = () => {
@@ -48,53 +46,101 @@ export default function DefaultLayout() {
       {!token ? (
         <Navigate to="/login" />
       ) : (
-        <div id="defaultLayout" className="flex flex-col min-h-screen">
-          <header className="flex flex-wrap justify-between items-center p-4  ">
-            <div className="flex justify-between w-full sm:w-auto  xl:gap-2 ">
-              <div>
-              <Link to="/dashboard" className="hover:underline">Dashboard</Link>
-              </div>
-
-              <Link onClick={onLogout} className="btn-logout hover:underline text-red-600 " >Logout</Link>
-
-              <button className="sm:hidden p-2" onClick={toggleMenu}>
-                {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        <div id="defaultLayout" className="flex min-h-screen z-0">
+          {/* Sidebar */}
+          <aside
+            className={`w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform ${
+              menuOpen ? "translate-x-0" : "-translate-x-full"
+            } transition-transform duration-200 ease-in-out sm:relative sm:translate-x-0 sm:block flex flex-col`}
+          >
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold">Dashboard</h1>
+              <button className="sm:hidden" onClick={toggleMenu}>
+                <X className="h-6 w-6" />
               </button>
             </div>
-            <div className={`flex-col sm:flex-row sm:flex sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 ${menuOpen ? 'flex' : 'hidden'} sm:flex w-full sm:w-auto`}>
-              <Link to="/row" className="hover:underline">Row Items</Link>
-              { (user.role === 'owner' || user.role === 'admin') &&(<>
-              <Link to="/science" className="hover:underline">Data Science Lecturers</Link>
-              <Link to="/log" className="hover:underline">Log</Link>
-              <Link to="/money" className="hover:underline">Money</Link>
-              <Link to="/work" className="hover:underline">Work</Link>
-              </>)}
-     
-            <div className="flex items-center space-x-4">
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center p-2  rounded-md ">
-                  Theme
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuRadioGroup value={darkMode} onValueChange={setDarkMode}>
-                    <DropdownMenuRadioItem value="dark">Dark Mode</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="light">Light Mode</DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <span>{user.name}</span>
-            </div>
-            </div>
+            <nav className="flex flex-col space-y-4 flex-grow items-center">
+              <Link to="/row" className="hover:underline">
+                Row Items
+              </Link>
+              {(user.role === "owner" || user.role === "admin") && (
+                <>
+                  <Link to="/science" className="hover:underline">
+                    Data Science Lecturers
+                  </Link>
+                  <Link to="/log" className="hover:underline">
+                    Log
+                  </Link>
+                  <Link to="/money" className="hover:underline">
+                    Money
+                  </Link>
+                  <Link to="/work" className="hover:underline">
+                    Work
+                  </Link>
+                </>
+              )}
 
-          </header>
-          <main className="flex-1 p-4 bg-gray-100 dark:bg-gray-900">
-            <Outlet />
-          </main>
-          {notification &&
-            <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
-              {notification}
-            </div>
-          }
+              {/* Additional user controls */}
+              <div className="flex flex-col items-start mt-auto space-y-4">
+                <div className="flex items-center space-x-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="flex items-center p-2  rounded-md">
+                      Theme
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuRadioGroup
+                        value={darkMode}
+                        onValueChange={setDarkMode}
+                      >
+                        <DropdownMenuRadioItem value="dark">
+                          Dark Mode
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="light">
+                          Light Mode
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <span>{user.name}</span>
+                <div className="items-end">
+                  <LogOut
+                    size={40}
+                    color="#df2626"
+                    strokeWidth={2.5}
+                    className="cursor-pointer hover:text-red-800"
+                    onClick={onLogout}
+                  />
+                </div>
+              </div>
+            </nav>
+          </aside>
+
+          {/* Main Content */}
+          <div className="flex-1 p-4 bg-gray-100 dark:bg-gray-900">
+            <header className="flex justify-between items-center">
+              <Link to="/dashboard" className="hover:underline hidden sm:block">
+                Dashboard
+              </Link>
+              <button className="sm:hidden p-2" onClick={toggleMenu}>
+                {menuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+            </header>
+
+            <main className="mt-4">
+              <Outlet />
+            </main>
+
+            {notification && (
+              <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+                {notification}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </>
