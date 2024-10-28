@@ -227,6 +227,7 @@ const GooglePhotosFetch = () => {
               value={CLIENT_ID}
               onChange={(e) => setCLIENT_ID(e.target.value)}
               className="mt-1"
+              required
             />
           </div>
 
@@ -239,6 +240,7 @@ const GooglePhotosFetch = () => {
               value={CLIENT_SECRET}
               onChange={(e) => setCLIENT_SECRET(e.target.value)}
               className="mt-1"
+              required
             />
           </div>
 
@@ -251,6 +253,7 @@ const GooglePhotosFetch = () => {
               value={REFRESH_TOKEN}
               onChange={(e) => setREFRESH_TOKEN(e.target.value)}
               className="mt-1"
+              required
             />
           </div>
           <Button
