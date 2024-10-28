@@ -1,148 +1,252 @@
-import { Link, Navigate, Outlet } from "react-router-dom";
-import { useStateContext } from "../context/ContextProvider";
-import axiosClient from "../axios-client.js";
-import { useEffect, useState } from "react";
+'use client';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from '@/components/ui/collapsible';
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuRadioItem,
-  DropdownMenuRadioGroup,
-} from "./ui/dropdown-menu.jsx"; // Adjust the path as necessary
-import { LogOut, Menu, X } from "lucide-react"; // For icons
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarTrigger
+} from '@/components/ui/sidebar';
+import { navItems } from '@/constants/data';
+import {
+  BadgeCheck,
+  Bell,
+  ChevronRight,
+  ChevronsUpDown,
+  CreditCard,
+  GalleryVerticalEnd,
+  LogOut
+} from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth'; // Custom hook for auth management
+import { useLocation, Link } from 'react-router-dom';
+import * as React from 'react';
+// import { Breadcrumbs } from '../breadcrumbs';
+import { Icons } from './icons';
+import SearchInput from './search-input';
+import ModeToggle from './mode-toggle';
+import { UserNav } from './user-nav';
 
-export default function DefaultLayout() {
-  const { user, token, setUser, setToken, notification } = useStateContext();
-  const [darkMode, setDarkMode] = useState("dark"); // Default dark mode
-  const [menuOpen, setMenuOpen] = useState(false);
+export const company = {
+  name: 'Acme Inc',
+  logo: GalleryVerticalEnd,
+  plan: 'Enterprise'
+};
 
-  useEffect(() => {
-    if (!token) return;
+export default function AppSidebar({ children }) {
+  const [mounted, setMounted] = React.useState(false);
+  const { user, logout } = useAuth(); // Assume this hook provides user data and logout function
+  const location = useLocation();
 
-    axiosClient.get("/user").then(({ data }) => {
-      setUser(data);
-    });
-  }, [token]);
+  // Only render after first client-side mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode === "dark");
-  }, [darkMode]);
-
-  const onLogout = (ev) => {
-    ev.preventDefault();
-
-    axiosClient.post("/logout").then(() => {
-      setUser({});
-      setToken(null);
-    });
-  };
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+  if (!mounted) {
+    return null; // or a loading skeleton
+  }
 
   return (
-    <>
-      {!token ? (
-        <Navigate to="/login" />
-      ) : (
-        <div id="defaultLayout" className="flex min-h-screen z-0">
-          {/* Sidebar */}
-          <aside
-            className={`w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform ${
-              menuOpen ? "translate-x-0" : "-translate-x-full"
-            } transition-transform duration-200 ease-in-out sm:relative sm:translate-x-0 sm:block flex flex-col`}
-          >
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Dashboard</h1>
-              <button className="sm:hidden" onClick={toggleMenu}>
-                <X className="h-6 w-6" />
-              </button>
+    <SidebarProvider>
+      <Sidebar collapsible="icon">
+        <SidebarHeader>
+          <div className="flex gap-2 py-2 text-sidebar-accent-foreground">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <company.logo className="size-4" />
             </div>
-            <nav className="flex flex-col space-y-4 flex-grow items-center">
-              <Link to="/row" className="hover:underline">
-                Row Items
-              </Link>
-              {(user.role === "owner" || user.role === "admin") && (
-                <>
-                  <Link to="/science" className="hover:underline">
-                    Data Science Lecturers
-                  </Link>
-                  <Link to="/log" className="hover:underline">
-                    Log
-                  </Link>
-                  <Link to="/money" className="hover:underline">
-                    Money
-                  </Link>
-                  <Link to="/work" className="hover:underline">
-                    Work
-                  </Link>
-                </>
-              )}
-
-              {/* Additional user controls */}
-              <div className="flex flex-col items-start mt-auto space-y-4">
-                <div className="flex items-center space-x-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="flex items-center p-2  rounded-md">
-                      Theme
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuRadioGroup
-                        value={darkMode}
-                        onValueChange={setDarkMode}
-                      >
-                        <DropdownMenuRadioItem value="dark">
-                          Dark Mode
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="light">
-                          Light Mode
-                        </DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <span>{user.name}</span>
-                <div className="items-end">
-                  <LogOut
-                    size={40}
-                    color="#df2626"
-                    strokeWidth={2.5}
-                    className="cursor-pointer hover:text-red-800"
-                    onClick={onLogout}
-                  />
-                </div>
-              </div>
-            </nav>
-          </aside>
-
-          {/* Main Content */}
-          <div className="flex-1 p-4 bg-gray-100 dark:bg-gray-900">
-            <header className="flex justify-between items-center">
-              <Link to="/dashboard" className="hover:underline hidden sm:block">
-                Dashboard
-              </Link>
-              <button className="sm:hidden p-2" onClick={toggleMenu}>
-                {menuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
-              </button>
-            </header>
-
-            <main className="mt-4">
-              <Outlet />
-            </main>
-
-            {notification && (
-              <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
-                {notification}
-              </div>
-            )}
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-semibold">{company.name}</span>
+              <span className="truncate text-xs">{company.plan}</span>
+            </div>
           </div>
-        </div>
-      )}
-    </>
+        </SidebarHeader>
+        <SidebarContent className="overflow-x-hidden">
+          <SidebarGroup>
+            <SidebarGroupLabel>Overview</SidebarGroupLabel>
+            <SidebarMenu>
+              {navItems.map((item) => {
+                const Icon = item.icon ? Icons[item.icon] : Icons.logo;
+                return item?.items && item?.items?.length > 0 ? (
+                  <Collapsible
+                    key={item.title}
+                    asChild
+                    defaultOpen={item.isActive}
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          tooltip={item.title}
+                          isActive={location.pathname === item.url}
+                        >
+                          {item.icon && <Icon />}
+                          <span>{item.title}</span>
+                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.items?.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={location.pathname === subItem.url}
+                              >
+                                <Link to={subItem.url}>
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.title}
+                      isActive={location.pathname === item.url}
+                    >
+                      <Link to={item.url}>
+                        <Icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    size="lg"
+                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  >
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage
+                        src={user?.image || ''}
+                        alt={user?.name || ''}
+                      />
+                      <AvatarFallback className="rounded-lg">
+                        {user?.name?.slice(0, 2)?.toUpperCase() || 'CN'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">
+                        {user?.name || ''}
+                      </span>
+                      <span className="truncate text-xs">
+                        {user?.email || ''}
+                      </span>
+                    </div>
+                    <ChevronsUpDown className="ml-auto size-4" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                  side="bottom"
+                  align="end"
+                  sideOffset={4}
+                >
+                  <DropdownMenuLabel className="p-0 font-normal">
+                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                      <Avatar className="h-8 w-8 rounded-lg">
+                        <AvatarImage
+                          src={user?.image || ''}
+                          alt={user?.name || ''}
+                        />
+                        <AvatarFallback className="rounded-lg">
+                          {user?.name?.slice(0, 2)?.toUpperCase() || 'CN'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="truncate font-semibold">
+                          {user?.name || ''}
+                        </span>
+                        <span className="truncate text-xs">
+                          {user?.email || ''}
+                        </span>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <BadgeCheck />
+                      Account
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <CreditCard />
+                      Billing
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Bell />
+                      Notifications
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout}>
+                    <LogOut />
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            {/* <Breadcrumbs /> */}
+          </div>
+          <div className="hidden w-1/3 items-center gap-2 px-4 md:flex">
+            <SearchInput />
+          </div>
+          <div className="flex items-center gap-2 px-4">
+            <UserNav />
+            <ModeToggle />
+          </div>
+        </header>
+        {/* page main content */}
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
