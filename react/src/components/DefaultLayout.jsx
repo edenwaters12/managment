@@ -8,12 +8,12 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioItem,
   DropdownMenuRadioGroup,
-} from "./ui/dropdown-menu.jsx"; // Adjust the path as necessary
-import { LogOut, Menu, X } from "lucide-react"; // For icons
+} from "./ui/dropdown-menu.jsx";
+import { LogOut, Menu, X } from "lucide-react";
 
 export default function DefaultLayout() {
   const { user, token, setUser, setToken, notification } = useStateContext();
-  const [darkMode, setDarkMode] = useState("dark"); // Default dark mode
+  const [darkMode, setDarkMode] = useState("dark");
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function DefaultLayout() {
 
   const onLogout = (ev) => {
     ev.preventDefault();
-
+    
     axiosClient.post("/logout").then(() => {
       setUser({});
       setToken(null);
@@ -46,12 +46,12 @@ export default function DefaultLayout() {
       {!token ? (
         <Navigate to="/login" />
       ) : (
-        <div id="defaultLayout" className="flex min-h-screen z-0">
+        <div id="defaultLayout" className="flex min-h-screen relative z-1">
           {/* Sidebar */}
           <aside
             className={`w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform ${
               menuOpen ? "translate-x-0" : "-translate-x-full"
-            } transition-transform duration-200 ease-in-out sm:relative sm:translate-x-0 sm:block flex flex-col`}
+            } transition-transform duration-200 ease-in-out sm:relative sm:translate-x-0 sm:block flex flex-col bg-white dark:bg-gray-800 z-20`}
           >
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -79,12 +79,10 @@ export default function DefaultLayout() {
                   </Link>
                 </>
               )}
-
-              {/* Additional user controls */}
               <div className="flex flex-col items-start mt-auto space-y-4">
                 <div className="flex items-center space-x-2">
                   <DropdownMenu>
-                    <DropdownMenuTrigger className="flex items-center p-2  rounded-md">
+                    <DropdownMenuTrigger className="flex items-center p-2 rounded-md">
                       Theme
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
@@ -115,6 +113,14 @@ export default function DefaultLayout() {
               </div>
             </nav>
           </aside>
+
+          {/* Backdrop for mobile menu */}
+          {menuOpen && (
+            <div
+              className="fixed inset-0 bg-black opacity-50 "
+              onClick={toggleMenu} // Close the menu when clicking outside
+            />
+          )}
 
           {/* Main Content */}
           <div className="flex-1 p-4 bg-gray-100 dark:bg-gray-900">
