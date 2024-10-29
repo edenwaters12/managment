@@ -57,7 +57,7 @@ export default function DefaultLayout() {
           className="flex min-h-screen flex-col sm:flex-row "
         >
           <aside
-            className={` sm:bg-slate-950 sm:bg-opacity-100 transform transition-transform duration-300 z-20 
+            className={` dark:sm:bg-slate-950 sm:bg-opacity-100 transform transition-transform duration-300 z-20 
               ${menuOpen ? "translate-x-0" : "-translate-x-full"} 
               sm:translate-x-0 sm:relative sm:w-64 w-full sm:flex flex-col py-6 px-4 fixed h-full`}
           >
@@ -96,8 +96,8 @@ export default function DefaultLayout() {
                     to="/science"
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `hover:underline ${
-                        isActive ? "text-blue-500 font-semibold" : ""
+                      `hover:underline hover:text-lg ${
+                        isActive ? "text-blue-500 font-semibold " : ""
                       }`
                     }
                   >
@@ -107,8 +107,8 @@ export default function DefaultLayout() {
                     to="/log"
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `hover:underline ${
-                        isActive ? "text-blue-500 font-semibold" : ""
+                      `hover:underline hover:text-lg ${
+                        isActive ? "text-blue-500 font-semibold " : ""
                       }`
                     }
                   >
@@ -118,7 +118,7 @@ export default function DefaultLayout() {
                     to="/money"
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `hover:underline ${
+                      `hover:underline hover:text-lg ${
                         isActive ? "text-blue-500 font-semibold" : ""
                       }`
                     }
@@ -129,7 +129,7 @@ export default function DefaultLayout() {
                     to="/work"
                     onClick={handleLinkClick}
                     className={({ isActive }) =>
-                      `hover:underline ${
+                      `hover:underline hover:text-lg ${
                         isActive ? "text-blue-500 font-semibold" : ""
                       }`
                     }
@@ -167,7 +167,7 @@ export default function DefaultLayout() {
           {/* Backdrop for mobile menu */}
           {menuOpen && (
             <div
-              className="fixed inset-0 bg-black opacity-50 sm:hidden h-full"
+              className="fixed inset-0 dark:bg-black opacity-50 sm:hidden h-full"
               onClick={toggleMenu}
             />
           )}
@@ -200,7 +200,7 @@ export default function DefaultLayout() {
             </main>
 
             {notification && (
-              <div className="fixed bottom-4 right-4 p-4 bg-gray-800 text-white rounded-lg shadow-lg">
+              <div className="fixed bottom-4 right-4 p-4 dark:bg-gray-800 text-white rounded-lg shadow-lg">
                 {notification}
               </div>
             )}
