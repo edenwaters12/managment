@@ -68,10 +68,10 @@ export default function MoneyShow() {
           placeholder="Search..."
           value={searchQuery}
           onChange={handleSearchChange}
-          className="w-full p-2 border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          className="w-full p-2 border  rounded "
         />
       </div>
-      <Card className="w-full max-w-md p-8 bg-white dark:bg-gray-800 text-black dark:text-white">
+      <Card className="w-full max-w-md p-8 ">
         <h1 className="text-2xl font-semibold mb-6 text-center">
           Money Management Details
         </h1>

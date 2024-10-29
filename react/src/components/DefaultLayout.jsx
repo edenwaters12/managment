@@ -30,7 +30,7 @@ export default function DefaultLayout() {
 
   const onLogout = (ev) => {
     ev.preventDefault();
-    
+
     axiosClient.post("/logout").then(() => {
       setUser({});
       setToken(null);
@@ -51,7 +51,7 @@ export default function DefaultLayout() {
           <aside
             className={`w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform ${
               menuOpen ? "translate-x-0" : "-translate-x-full"
-            } transition-transform duration-200 ease-in-out sm:relative sm:translate-x-0 sm:block flex flex-col bg-white dark:bg-gray-800 z-20`}
+            } transition-transform duration-200 ease-in-out sm:relative sm:translate-x-0 sm:block flex flex-col  z-20`}
           >
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -60,6 +60,9 @@ export default function DefaultLayout() {
               </button>
             </div>
             <nav className="flex flex-col space-y-4 flex-grow items-center">
+              <Link to="/dashboard" className="hover:underline">
+                Dashboard
+              </Link>
               <Link to="/row" className="hover:underline">
                 Row Items
               </Link>
@@ -103,7 +106,7 @@ export default function DefaultLayout() {
                 <span>{user.name}</span>
                 <div className="items-end">
                   <LogOut
-                    size={40}
+                    size={33}
                     color="#df2626"
                     strokeWidth={2.5}
                     className="cursor-pointer hover:text-red-800"
@@ -125,9 +128,6 @@ export default function DefaultLayout() {
           {/* Main Content */}
           <div className="flex-1 p-4 bg-gray-100 dark:bg-gray-900">
             <header className="flex justify-between items-center">
-              <Link to="/dashboard" className="hover:underline hidden sm:block">
-                Dashboard
-              </Link>
               <button className="sm:hidden p-2" onClick={toggleMenu}>
                 {menuOpen ? (
                   <X className="h-6 w-6" />
