@@ -21,12 +21,12 @@ import {
 } from "@/components/ui/table";
 
 export default function workShow() {
-  const { user,setNotification } = useStateContext();
+  const { user, setNotification } = useStateContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!(user.role == 'owner' || user.role == 'admin')){
-      navigate('/404')
+    if (!(user.role == "owner" || user.role == "admin")) {
+      navigate("/404");
     }
   });
   const [works, setWorks] = useState([]);
@@ -79,7 +79,7 @@ export default function workShow() {
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Daliy Works</h1>
         <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto sm:space-x-4">
-          <div className="w-full sm:w-1/2 z-40 mb-4 sm:mb-0 sm:order-1 mr-6">
+          <div className="w-full sm:w-1/2 mb-4 sm:mb-0 sm:order-1 mr-6">
             <Select
               value={category}
               onValueChange={(value) => setCategory(value)}
@@ -104,7 +104,7 @@ export default function workShow() {
 
           {/* Create button */}
           <Button
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 z-50 xl:w-[100px]"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 xl:w-[100px]"
             onClick={() => navigate("/work/new")}
           >
             Create
@@ -137,12 +137,14 @@ export default function workShow() {
               <TableBody>
                 {works.map((work) => (
                   <TableRow key={work.id}>
-                    <Link
-                      to={`/work/${work.id}`}
-                      className="text-blue-500 hover:underline"
-                    >
-                      <TableCell>{work.Today_date}</TableCell>
-                    </Link>
+                    <TableCell>
+                      <Link
+                        to={`/work/${work.id}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {work.Today_date}
+                      </Link>
+                    </TableCell>
                     <TableCell>{work.category.toUpperCase()}</TableCell>
                     <TableCell>{work.title}</TableCell>
                     <TableCell>{work.start_time}</TableCell>

@@ -215,7 +215,7 @@ export default function TodosPage() {
         <h3>Total : {total}</h3>
 
         <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto sm:space-x-4">
-          <div className="w-full sm:w-1/2 z-40 mb-4 sm:mb-0 sm:order-1 mr-6">
+          <div className="w-full sm:w-1/2 mb-4 sm:mb-0 sm:order-1 mr-6">
             <Select
               value={category}
               onValueChange={(value) => {
@@ -244,10 +244,10 @@ export default function TodosPage() {
             placeholder="Search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="py-2 px-4 rounded-md focus:outline-none focus:ring-2 sm:order-2 z-50 xl:w-[200px]"
+            className="py-2 px-4 rounded-md focus:outline-none focus:ring-2 sm:order-2 xl:w-[200px]"
           />
           <Button
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 z-50 xl:w-[100px]"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 xl:w-[100px]"
             onClick={() => navigate("/science/new")}
           >
             Create

@@ -272,7 +272,7 @@ const GooglePhotosFetch = () => {
             </div>
           )}
           {showFullscreen && (
-            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 flex justify-center items-center z-50">
+            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-90 flex justify-center items-center">
               <X
                 size={80}
                 color="#5384a2"
