@@ -75,9 +75,9 @@ export default function TodosPage() {
 
         setTotal(response.data.total);
         if (response.data.current_page == response.data.last_page) {
-          setHasMore(false); 
+          setHasMore(false);
         }
-        setPage((prevPage) => prevPage + 1); 
+        setPage((prevPage) => prevPage + 1);
         setLoading(false);
       })
       .catch((error) => {
@@ -120,7 +120,7 @@ export default function TodosPage() {
           setTodos([]);
           setPage(1);
           setHasMore(true);
-          getTodo(); 
+          getTodo();
         })
         .catch((e) => {
           console.log(e);
@@ -257,7 +257,7 @@ export default function TodosPage() {
 
       <div className="mt-8">
         <Card className="overflow-x-auto">
-          {loading && todos.length === 0 ? ( 
+          {loading && todos.length === 0 ? (
             <div className="flex items-center justify-center p-4">
               <Loader />
             </div>
@@ -309,13 +309,11 @@ export default function TodosPage() {
               No todos found.
             </div>
           )}
-          {loading &&
-            hasMore &&
-            todos.length != 0 && ( 
-              <div className="flex items-center justify-center p-4">
-                <Loader />
-              </div>
-            )}
+          {loading && hasMore && todos.length != 0 && (
+            <div className="flex items-center justify-center p-4">
+              <Loader />
+            </div>
+          )}
         </Card>
         <AlertDialogDemo
           open={isAlertOpen}
