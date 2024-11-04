@@ -43,13 +43,7 @@ export default function TodosPage() {
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    if (
-      !(
-        user.role === "owner" ||
-        user.role === "admin" ||
-        user.role === "cdmiadmin"
-      )
-    ) {
+    if (!["owner", "science"].some((s) => user.role.includes(s))) {
       navigate("/404");
     }
   }, [user, navigate]);

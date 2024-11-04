@@ -25,10 +25,10 @@ export default function workShow() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!(user.role == "owner" || user.role == "admin")) {
+    if (!["owner", "work"].some((s) => user.role.includes(s))) {
       navigate("/404");
     }
-  });
+  }, [user, navigate]);
   const [works, setWorks] = useState([]);
   const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(false);

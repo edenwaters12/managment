@@ -40,7 +40,7 @@ export default function RowItemShow() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   useEffect(() => {
-    if (!["owner", "admin", "cdmiadmin", "cdmi", "visiter"].includes(user.role)) {
+    if (!["owner", "row"].some((s) => user.role.includes(s))) {
       navigate("/404");
     }
   }, [user, navigate]);
