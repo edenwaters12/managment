@@ -69,7 +69,7 @@ export default function Logpage() {
     getTodo();
   }, [category]);
 
-  const onDeleteClick = (todo=false) => {
+  const onDeleteClick = (todo = false) => {
     setSelectedTodo(todo);
     setIsAlertOpen(true);
   };
@@ -207,7 +207,8 @@ export default function Logpage() {
         <h1
           className="text-2xl font-semibold cursor-pointer"
           onClick={() => setSearchQuery("")}
-        >Log The Login
+        >
+          Log The Login
         </h1>
         <div className="flex flex-col sm:flex-row sm:items-center w-full sm:w-auto sm:space-x-4">
           <div className="w-full sm:w-1/2 mb-4 sm:mb-0 sm:order-1 mr-6">

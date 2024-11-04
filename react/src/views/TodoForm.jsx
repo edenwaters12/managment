@@ -17,8 +17,14 @@ export default function TodoForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!(user.role === 'owner' || user.role === 'admin' || user.role === 'cdmiadmin')){
-      navigate('/404')
+    if (
+      !(
+        user.role === "owner" ||
+        user.role === "admin" ||
+        user.role === "cdmiadmin"
+      )
+    ) {
+      navigate("/404");
     }
   });
   const [title, setTitle] = useState("");

@@ -43,7 +43,7 @@ export default function Signup() {
       <div className="flex flex-col items-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
         <Card className="w-full max-w-md p-8 bg-white dark:bg-gray-800 text-black dark:text-white">
           <h1 className="text-2xl font-semibold mb-6 text-center">Signup</h1>
-         
+
           {errors && Object.keys(errors).length > 0 && (
             <div className="mb-4 p-4 border border-red-500 text-red-500 rounded">
               {Object.keys(errors).map((key) => (
@@ -51,49 +51,48 @@ export default function Signup() {
               ))}
             </div>
           )}
-            <form onSubmit={onSubmit} className="space-y-4">
-              <Input
-                type="text"
-                ref={nameRef}
-                placeholder="Name"
-                required
-                className="w-full"
-              />
-              <Input
-                type="text"
-                ref={usernameRef}
-                placeholder="username"
-                required
-                className="w-full"
-              />
-              <Input
-                type="email"
-                ref={emailRef}
-                placeholder="Email"
-                required
-                className="w-full"
-              />
-              <Input
-                type="password"
-                ref={passwordRef}
-                placeholder="Password"
-                className="w-full"
-              />
-              <Input
-                type="password"
-                ref={passwordConfirmationRef}
-                placeholder="Password Confirmation"
-                className="w-full"
-              />
+          <form onSubmit={onSubmit} className="space-y-4">
+            <Input
+              type="text"
+              ref={nameRef}
+              placeholder="Name"
+              required
+              className="w-full"
+            />
+            <Input
+              type="text"
+              ref={usernameRef}
+              placeholder="username"
+              required
+              className="w-full"
+            />
+            <Input
+              type="email"
+              ref={emailRef}
+              placeholder="Email"
+              required
+              className="w-full"
+            />
+            <Input
+              type="password"
+              ref={passwordRef}
+              placeholder="Password"
+              className="w-full"
+            />
+            <Input
+              type="password"
+              ref={passwordConfirmationRef}
+              placeholder="Password Confirmation"
+              className="w-full"
+            />
 
-              {/* <Button
+            {/* <Button
                 type="submit"
                 className="w-full bg-blue-500 text-white hover:bg-blue-600"
               >
                 Save
               </Button> */}
-            </form>
-        
+          </form>
         </Card>
       </div>
     </>

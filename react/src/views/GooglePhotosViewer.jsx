@@ -50,7 +50,7 @@ const GooglePhotosFetch = () => {
     });
 
     if (!response.ok) {
-      formdata(true)
+      formdata(true);
       throw new Error("Failed to get access token: " + response.statusText);
     }
 

@@ -16,14 +16,13 @@ import {
 } from "@/components/ui/Select.jsx";
 import { useStateContext } from "../context/ContextProvider.jsx";
 
-
 export default function MoneyForm() {
   const { user, setNotification } = useStateContext();
   const navigate = useNavigate();
 
-  useEffect(() => { 
-    if (!(user.role === 'owner' || user.role === 'admin' )){
-      navigate('/404')
+  useEffect(() => {
+    if (!(user.role === "owner" || user.role === "admin")) {
+      navigate("/404");
     }
   });
   const { id } = useParams(); // Get the ID from the URL parameters
@@ -43,7 +42,6 @@ export default function MoneyForm() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showAlertDialog, setShowAlertDialog] = useState(false);
-  
 
   const categoryOptions = ["deposite", "withdraw", "remaining"];
   const moneyTypeOptions = ["cash", "online"];
@@ -58,8 +56,7 @@ export default function MoneyForm() {
           setFormData(response.data);
         } catch (err) {
           setNotification(err.message);
-          setShowAlertDialog(true)
-          
+          setShowAlertDialog(true);
         } finally {
           setLoading(false);
         }
@@ -92,7 +89,6 @@ export default function MoneyForm() {
       }
     }
   };
-
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
@@ -371,7 +367,6 @@ export default function MoneyForm() {
         onConfirm={() => window.location.reload()}
         description="Failed to fetch data. Please try again or go to the home page."
       />
-      
     </div>
   );
 }
