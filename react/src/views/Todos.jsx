@@ -241,12 +241,14 @@ export default function TodosPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="py-2 px-4 rounded-md focus:outline-none focus:ring-2 sm:order-2 xl:w-[200px]"
           />
-          <Button
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 xl:w-[100px]"
-            onClick={() => navigate("/science/new")}
-          >
-            Create
-          </Button>
+          {["owner", "science-c"].some((s) => user.role.includes(s)) && (
+            <Button
+              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:order-2 xl:w-[100px]"
+              onClick={() => navigate("/science/new")}
+            >
+              Create
+            </Button>
+          )}
         </div>
       </div>
 
