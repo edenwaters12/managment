@@ -22,19 +22,21 @@ const MoneyShow = React.lazy(() => import("./views/MoneyShow.jsx"));
 const RowItemShow = React.lazy(() => import("./views/RowItems.jsx"));
 const RowItemFrom = React.lazy(() => import("./views/RowItemsFrom.jsx"));
 const Logpage = React.lazy(() => import("./views/log.jsx"));
-const GooglePhotosViewer = React.lazy(() => import("./views/GooglePhotosViewer.jsx"));
+const GooglePhotosViewer = React.lazy(() =>
+  import("./views/GooglePhotosViewer.jsx")
+);
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <DefaultLayout />,
     children: [
       {
-        path: '/',
-        element: <Navigate to="/dashboard" />
+        path: "/",
+        element: <Navigate to="/dashboard" />,
       },
       {
-        path: '/dashboard',
+        path: "/dashboard",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -44,7 +46,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/users',
+        path: "/users",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -54,7 +56,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/users/new',
+        path: "/users/new",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -64,7 +66,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/users/:id',
+        path: "/users/:id",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -74,7 +76,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/science',
+        path: "/science",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -84,7 +86,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/science/:id/edit',
+        path: "/science/:id/edit",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -94,7 +96,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/science/:id',
+        path: "/science/:id",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -104,7 +106,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/science/new',
+        path: "/science/new",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -114,7 +116,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/work',
+        path: "/work",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -124,7 +126,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/work/:id/edit',
+        path: "/work/:id/edit",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -134,7 +136,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/work/:id',
+        path: "/work/:id",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -144,7 +146,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/work/new',
+        path: "/work/new",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -154,7 +156,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/log',
+        path: "/log",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -164,7 +166,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/log/:id',
+        path: "/log/:id",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -174,7 +176,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/money',
+        path: "/money",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -184,7 +186,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/money/:id',
+        path: "/money/:id",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -194,7 +196,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/money/new',
+        path: "/money/new",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -204,7 +206,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/row',
+        path: "/row",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -214,7 +216,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/row/:id/edit',
+        path: "/row/:id/edit",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -224,7 +226,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/row/:id',
+        path: "/row/:id",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -234,7 +236,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/row/new',
+        path: "/row/new",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -243,15 +245,14 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-
-    ]
+    ],
   },
   {
-    path: '/',
+    path: "/",
     element: <GuestLayout />,
     children: [
       {
-        path: '/login',
+        path: "/login",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -261,7 +262,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/signup-dhruvishlathiya',
+        path: "/signup-dhruvishlathiya",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ErrorBoundary>
@@ -269,8 +270,8 @@ const router = createBrowserRouter([
             </ErrorBoundary>
           </Suspense>
         ),
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/google-photos",
@@ -301,7 +302,7 @@ const router = createBrowserRouter([
         </ErrorBoundary>
       </Suspense>
     ),
-  }
+  },
 ]);
 
 export default router;

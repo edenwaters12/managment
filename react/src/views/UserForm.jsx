@@ -26,7 +26,7 @@ export default function UserForm() {
     password_confirmation: "",
   });
   const [errors, setErrors] = useState({});
-  const [category, setCategory] = useState('null');
+  const [category, setCategory] = useState("null");
   const [loading, setLoading] = useState(false);
   const { setNotification } = useStateContext();
 
@@ -116,7 +116,7 @@ export default function UserForm() {
               required
               className="w-full"
             />
-            <Select   
+            <Select
               value={category}
               onValueChange={(value) => setCategory(value)}
               className="mt-1 block w-full"

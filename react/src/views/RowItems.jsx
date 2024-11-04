@@ -108,20 +108,20 @@ export default function RowItemShow() {
         header: "Files",
         cell: (info) => {
           const files = JSON.parse(info.getValue() || "[]");
-          return files.length > 0 ? (
-            files.map((file, index) => (
-              <Link
-                key={index}
-                to={`${import.meta.env.VITE_API_DOWNLOAD_URL}/storage/${file}`}
-                className="text-blue-500 hover:underline"
-                target="_blank"
-              >
-                View File {index + 1}
-              </Link>
-            ))
-          ) : (
-            "No files"
-          );
+          return files.length > 0
+            ? files.map((file, index) => (
+                <Link
+                  key={index}
+                  to={`${
+                    import.meta.env.VITE_API_DOWNLOAD_URL
+                  }/storage/${file}`}
+                  className="text-blue-500 hover:underline"
+                  target="_blank"
+                >
+                  View File {index + 1}
+                </Link>
+              ))
+            : "No files";
         },
       }),
 

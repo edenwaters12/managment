@@ -17,8 +17,8 @@ export default function workForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!(user.role === 'owner' || user.role === 'admin' )){
-      navigate('/404')
+    if (!(user.role === "owner" || user.role === "admin")) {
+      navigate("/404");
     }
   });
 
@@ -197,19 +197,19 @@ export default function workForm() {
         </div>
 
         <div className="flex space-x-4">
-        {user.name === `${import.meta.env.VITE_ADMIN}` && (
-          <Button
-            type={mode === "show" ? "button" : "submit"}
-            className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
-            onClick={() => mode === "show" && navigate(`/work/${id}/edit`)}
-          >
-            {mode === "update"
-              ? "Update work"
-              : mode == "show"
-              ? "Edit"
-              : "Create work"}
-          </Button>
-        )}
+          {user.name === `${import.meta.env.VITE_ADMIN}` && (
+            <Button
+              type={mode === "show" ? "button" : "submit"}
+              className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
+              onClick={() => mode === "show" && navigate(`/work/${id}/edit`)}
+            >
+              {mode === "update"
+                ? "Update work"
+                : mode == "show"
+                ? "Edit"
+                : "Create work"}
+            </Button>
+          )}
           <Button
             type="button"
             className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]"
