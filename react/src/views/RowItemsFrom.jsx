@@ -11,7 +11,7 @@ export default function RowItemForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!["owner", "admin", "cdmiadmin", "cdmi"].includes(user.role)) {
+    if (!["owner", "row"].some((s) => user.role.includes(s))) {
       navigate("/404");
     }
   }, [user, navigate]);
@@ -32,10 +32,10 @@ export default function RowItemForm() {
     if (pathname.includes("/new")) {
       setMode("create");
     } else if (pathname.includes("/edit") && id) {
-      setMode("update");
-      if (!["owner", "admin", "cdmiadmin"].includes(user.role)) {
+      if (!["owner", "row-e"].some((s) => user.role.includes(s))) {
         navigate("/404");
       }
+      setMode("update");
       setLoading(true);
       axiosClient
         .get(`/row/${id}`)
@@ -147,7 +147,7 @@ export default function RowItemForm() {
             disabled={mode === "show"}
           />
         </div>
-        {["owner", "admin", "cdmiadmin"].includes(user.role) && (
+        {["owner", "row-e"].some((s) => user.role.includes(s)) && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Author
@@ -247,10 +247,24 @@ export default function RowItemForm() {
         <div className="flex space-x-4">
           <Button
             type={mode === "show" ? "button" : "submit"}
-            className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
+            className={`bg-blue-500 text-white hover:bg-blue-600 w-[100px] ${
+              !["owner", "row"].some((s) => user.role.includes(s)) &&
+              mode !== "create"
+                ? "hidden"
+                : ""
+            } `}
             onClick={() => mode === "show" && navigate(`/row/${id}/edit`)}
           >
-            {mode === "update" ? "Update" : mode === "show" ? "Edit" : "Create"}
+            {["owner", "row"].some((s) => user.role.includes(s)) &&
+            mode !== "create"
+              ? mode === "update"
+                ? "Update"
+                : mode === "show"
+                ? "Edit"
+                : "Create"
+              : mode === "create"
+              ? "Create"
+              : null}
           </Button>
 
           <Button

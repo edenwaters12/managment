@@ -42,6 +42,9 @@ export default function workForm() {
     if (pathname.includes("/new")) {
       setMode("create");
     } else if (pathname.includes("/edit")) {
+      if (!["owner", "work-e"].some((s) => user.role.includes(s))) {
+        navigate("/404");
+      }
       setMode("update");
       if (id) {
         setLoading(true);
@@ -197,19 +200,27 @@ export default function workForm() {
         </div>
 
         <div className="flex space-x-4">
-          {user.name === `${import.meta.env.VITE_ADMIN}` && (
-            <Button
-              type={mode === "show" ? "button" : "submit"}
-              className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
-              onClick={() => mode === "show" && navigate(`/work/${id}/edit`)}
-            >
-              {mode === "update"
-                ? "Update work"
-                : mode == "show"
+          <Button
+            type={mode === "show" ? "button" : "submit"}
+            className={`bg-blue-500 text-white hover:bg-blue-600 w-[100px] ${
+              !["owner", "work-e"].some((s) => user.role.includes(s)) &&
+              mode !== "create"
+                ? "hidden"
+                : ""
+            } `}
+            onClick={() => mode === "show" && navigate(`/work/${id}/edit`)}
+          >
+            {["owner", "work-e"].some((s) => user.role.includes(s)) &&
+            mode !== "create"
+              ? mode === "update"
+                ? "Update"
+                : mode === "show"
                 ? "Edit"
-                : "Create work"}
-            </Button>
-          )}
+                : "Create"
+              : mode === "create"
+              ? "Create"
+              : null}
+          </Button>
           <Button
             type="button"
             className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]"

@@ -17,16 +17,10 @@ export default function TodoForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (
-      !(
-        user.role === "owner" ||
-        user.role === "admin" ||
-        user.role === "cdmiadmin"
-      )
-    ) {
+    if (!["owner", "science"].some((s) => user.role.includes(s))) {
       navigate("/404");
     }
-  });
+  }, [user, navigate]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [todayDate, setTodayDate] = useState(
@@ -48,6 +42,9 @@ export default function TodoForm() {
     if (pathname.includes("/new")) {
       setMode("create");
     } else if (pathname.includes("/edit")) {
+      if (!["owner", "science-e"].some((s) => user.role.includes(s))) {
+        navigate("/404");
+      }
       setMode("update");
       if (id) {
         setLoading(true);
@@ -232,19 +229,27 @@ export default function TodoForm() {
         </div>
 
         <div className="flex space-x-4">
-          {user.name === `${import.meta.env.VITE_ADMIN}` && (
-            <Button
-              type={mode === "show" ? "button" : "submit"}
-              className="bg-blue-500 text-white hover:bg-blue-600 w-[100px]"
-              onClick={() => mode === "show" && navigate(`/science/${id}/edit`)}
-            >
-              {mode === "update"
-                ? "Update Todo"
-                : mode == "show"
+          <Button
+            type={mode === "show" ? "button" : "submit"}
+            className={`bg-blue-500 text-white hover:bg-blue-600 w-[100px] ${
+              !["owner", "science-e"].some((s) => user.role.includes(s)) &&
+              mode !== "create"
+                ? "hidden"
+                : ""
+            } `}
+            onClick={() => mode === "show" && navigate(`/science/${id}/edit`)}
+          >
+            {["owner", "science-e"].some((s) => user.role.includes(s)) &&
+            mode !== "create"
+              ? mode === "update"
+                ? "Update"
+                : mode === "show"
                 ? "Edit"
-                : "Create Todo"}
-            </Button>
-          )}
+                : "Create"
+              : mode === "create"
+              ? "Create"
+              : null}
+          </Button>
           <Button
             type="button"
             className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]"
