@@ -157,25 +157,24 @@ export default function TodosPage() {
       columnHelper.display({
         id: "actions",
         header: "Actions",
-        cell: ({ row }) =>
-          (user.role === "owner" || user.role === "admin") && (
-            <>
-              <Link
-                to={`/science/${row.original.id}`}
-                className="text-blue-500 hover:underline"
+        cell: ({ row }) => (
+          <>
+            <Link
+              to={`/science/${row.original.id}`}
+              className="text-blue-500 hover:underline"
+            >
+              Show
+            </Link>
+            {["owner", "science-d"].some((s) => user.role.includes(s)) && (
+              <Button
+                className="ml-4 bg-red-500 text-white hover:bg-red-600"
+                onClick={() => onDeleteClick(row.original)}
               >
-                Show
-              </Link>
-              {["owner", "science-d"].some((s) => user.role.includes(s)) && (
-                <Button
-                  className="ml-4 bg-red-500 text-white hover:bg-red-600"
-                  onClick={() => onDeleteClick(row.original)}
-                >
-                  Delete
-                </Button>
-              )}
-            </>
-          ),
+                Delete
+              </Button>
+            )}
+          </>
+        ),
       }),
     ],
     [user]
