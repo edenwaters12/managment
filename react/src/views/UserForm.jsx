@@ -6,12 +6,6 @@ import { Input } from "@/components/ui/Input.jsx";
 import { Button } from "@/components/ui/Button.jsx";
 import { Card } from "@/components/ui/Card.jsx";
 import Loader from "@/components/ui/Loader.jsx";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select.jsx";
 
 export default function UserForm() {
   const navigate = useNavigate();
@@ -20,13 +14,30 @@ export default function UserForm() {
     id: null,
     name: "",
     username: "",
-    role: "null",
     email: "",
     password: "",
     password_confirmation: "",
   });
   const [errors, setErrors] = useState({});
-  const [category, setCategory] = useState("null");
+  const [roles, setRoles] = useState({
+    row: false,
+    "row-e": false,
+    "row-d": false,
+    science: false,
+    "data-c": false,
+    data: false,
+    log: false,
+    work: false,
+    "log-c": false,
+    "work-c": false,
+    "data-e": false,
+    "log-e": false,
+    "work-e": false,
+    "data-d": false,
+    "log-d": false,
+    "work-d": false,
+    beta: false,
+  });
   const [loading, setLoading] = useState(false);
   const { setNotification } = useStateContext();
 
@@ -38,7 +49,14 @@ export default function UserForm() {
         .then(({ data }) => {
           setLoading(false);
           setUser(data);
-          setCategory(data.role);
+          // Set roles based on user's current roles
+          const initialRoles = { ...roles };
+          data.roles.split(",").forEach((role) => {
+            if (initialRoles[role]) {
+              initialRoles[role] = true;
+            }
+          });
+          setRoles(initialRoles);
         })
         .catch(() => {
           setLoading(false);
@@ -51,12 +69,25 @@ export default function UserForm() {
     document.documentElement.classList.add("dark");
   }, []);
 
+  const handleRoleChange = (e) => {
+    const { name, checked } = e.target;
+    setRoles((prev) => ({ ...prev, [name]: checked }));
+  };
+
   const onSubmit = (ev) => {
     ev.preventDefault();
     setLoading(true);
 
-    const updatedUser = { ...user, role: category };
+    // Create a string of selected roles
+    const selectedRoles = Object.keys(roles)
+      .filter((role) => roles[role]) // Get keys of checked roles
+      .join(","); // Join them into a comma-separated string
 
+    const updatedUser = {
+      ...user,
+      role: selectedRoles, // Set the role field to the selected roles string
+    };
+    console.log(updatedUser);
     const request = user.id
       ? axiosClient.put(`/users/${user.id}`, updatedUser)
       : axiosClient.post("/users", updatedUser);
@@ -116,23 +147,28 @@ export default function UserForm() {
               required
               className="w-full"
             />
-            <Select
-              value={category}
-              onValueChange={(value) => setCategory(value)}
-              className="mt-1 block w-full"
-            >
-              <SelectTrigger>
-                <span>{category || "---select---"}</span>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="owner">owner</SelectItem>
-                <SelectItem value="admin">admin</SelectItem>
-                <SelectItem value="cdmiadmin">cdmiadmin</SelectItem>
-                <SelectItem value="cdmi">cdmi</SelectItem>
-                <SelectItem value="visitor">visitor</SelectItem>
-                <SelectItem value="null">null</SelectItem>
-              </SelectContent>
-            </Select>
+
+            {/* Checkboxes for roles */}
+            <div className="mb-4">
+              <h2 className="font-semibold mb-2">Roles</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {Object.keys(roles).map((role) => (
+                  <label key={role} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name={role}
+                      checked={roles[role]}
+                      onChange={handleRoleChange}
+                      className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out"
+                    />
+                    <span className="ml-2 capitalize">
+                      {role.replace("-", " ")}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
             <Input
               type="email"
               value={user.email}
