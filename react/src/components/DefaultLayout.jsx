@@ -79,64 +79,70 @@ export default function DefaultLayout() {
               >
                 Dashboard
               </NavLink>
-              <NavLink
-                to="/row"
-                onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `hover:underline ${
-                    isActive ? "text-blue-500 font-semibold" : ""
-                  }`
-                }
-              >
-                Row Items
-              </NavLink>
-              {(user.role === "owner" || user.role === "admin") && (
-                <>
-                  <NavLink
-                    to="/science"
-                    onClick={handleLinkClick}
-                    className={({ isActive }) =>
-                      `hover:underline hover:text-lg ${
-                        isActive ? "text-blue-500 font-semibold " : ""
-                      }`
-                    }
-                  >
-                    Data Science Lecturers
-                  </NavLink>
-                  <NavLink
-                    to="/log"
-                    onClick={handleLinkClick}
-                    className={({ isActive }) =>
-                      `hover:underline hover:text-lg ${
-                        isActive ? "text-blue-500 font-semibold " : ""
-                      }`
-                    }
-                  >
-                    Log
-                  </NavLink>
-                  <NavLink
-                    to="/money"
-                    onClick={handleLinkClick}
-                    className={({ isActive }) =>
-                      `hover:underline hover:text-lg ${
-                        isActive ? "text-blue-500 font-semibold" : ""
-                      }`
-                    }
-                  >
-                    Money
-                  </NavLink>
-                  <NavLink
-                    to="/work"
-                    onClick={handleLinkClick}
-                    className={({ isActive }) =>
-                      `hover:underline hover:text-lg ${
-                        isActive ? "text-blue-500 font-semibold" : ""
-                      }`
-                    }
-                  >
-                    Work
-                  </NavLink>
-                </>
+              {["owner", "row"].some((s) => user.role.includes(s)) && (
+                <NavLink
+                  to="/row"
+                  onClick={handleLinkClick}
+                  className={({ isActive }) =>
+                    `hover:underline ${
+                      isActive ? "text-blue-500 font-semibold" : ""
+                    }`
+                  }
+                >
+                  Row Items
+                </NavLink>
+              )}
+              {["owner", "science"].some((s) => user.role.includes(s)) && (
+                <NavLink
+                  to="/science"
+                  onClick={handleLinkClick}
+                  className={({ isActive }) =>
+                    `hover:underline hover:text-lg ${
+                      isActive ? "text-blue-500 font-semibold " : ""
+                    }`
+                  }
+                >
+                  Data Science Lecturers
+                </NavLink>
+              )}
+              {["owner", "log"].some((s) => user.role.includes(s)) && (
+                <NavLink
+                  to="/log"
+                  onClick={handleLinkClick}
+                  className={({ isActive }) =>
+                    `hover:underline hover:text-lg ${
+                      isActive ? "text-blue-500 font-semibold " : ""
+                    }`
+                  }
+                >
+                  Log
+                </NavLink>
+              )}
+              {["owner", "money"].some((s) => user.role.includes(s)) && (
+                <NavLink
+                  to="/money"
+                  onClick={handleLinkClick}
+                  className={({ isActive }) =>
+                    `hover:underline hover:text-lg ${
+                      isActive ? "text-blue-500 font-semibold" : ""
+                    }`
+                  }
+                >
+                  Money
+                </NavLink>
+              )}
+              {["owner", "work"].some((s) => user.role.includes(s)) && (
+                <NavLink
+                  to="/work"
+                  onClick={handleLinkClick}
+                  className={({ isActive }) =>
+                    `hover:underline hover:text-lg ${
+                      isActive ? "text-blue-500 font-semibold" : ""
+                    }`
+                  }
+                >
+                  Work
+                </NavLink>
               )}
               <div className="mt-auto space-y-4">
                 <div className="flex items-center space-x-2">
