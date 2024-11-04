@@ -12,10 +12,11 @@ export default function MoneyShow() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!(user.role === 'owner' || user.role === 'admin' )){
-      navigate('/404')
+    if (!["owner", "money"].some((s) => user.role.includes(s))) {
+      navigate("/404");
     }
-  });
+  }, [user, navigate]);
+  
   const { id } = useParams();
   const [entry, setEntry] = useState(null);
   const [loading, setLoading] = useState(true);
