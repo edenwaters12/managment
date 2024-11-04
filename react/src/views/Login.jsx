@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button.jsx";
 
 export default function Login() {
-  const usernameRef = useRef(); 
+  const usernameRef = useRef();
   const passwordRef = useRef();
   const { setUser, setToken } = useStateContext();
   const [message, setMessage] = useState(null);
@@ -17,7 +17,6 @@ export default function Login() {
 
     const userAgent = navigator.userAgent;
     let browserDetails = {};
-
 
     if ("userAgentData" in navigator) {
       navigator.userAgentData
@@ -36,13 +35,19 @@ export default function Login() {
             mobile: /Mobi|Android/i.test(navigator.userAgent),
           };
 
-          return axiosClient.get(
-            `https://ipinfo.io/json?token=${import.meta.env.VITE_IP_INFO_TOKEN}`
-          );
+          if (!import.meta.env.VITE_DEBUG == true) {
+            return axiosClient.get(
+              `https://ipinfo.io/json?token=${
+                import.meta.env.VITE_IP_INFO_TOKEN
+              }`
+            );
+          } else {
+            return "hello";
+          }
         })
         .then(({ data }) => {
           const payload = {
-            username: usernameRef.current.value,  // Access value safely
+            username: usernameRef.current.value, // Access value safely
             password: passwordRef.current.value, // Access value safely
             data: data,
             more: browserDetails,
