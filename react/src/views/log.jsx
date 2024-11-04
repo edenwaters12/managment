@@ -40,13 +40,7 @@ export default function Logpage() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   useEffect(() => {
-    if (
-      !(
-        user.role === "owner" ||
-        user.role === "admin" ||
-        user.role === "cdmiadmin"
-      )
-    ) {
+    if (!["owner", "log"].some((s) => user.role.includes(s))) {
       navigate("/404");
     }
   }, [user, navigate]);
@@ -159,23 +153,28 @@ export default function Logpage() {
       columnHelper.display({
         id: "actions",
         header: "Actions",
-        cell: ({ row }) =>
-          (user.role === "owner" || user.role === "admin") && (
-            <>
+        cell: ({ row }) => {
+          {
+            ["owner", "log"].some((s) => user.role.includes(s)) && (
               <Link
                 to={`/log/${row.original.id}`}
                 className="text-blue-500 hover:underline"
               >
                 Show
               </Link>
+            );
+          }
+          {
+            ["owner", "log-d"].some((s) => user.role.includes(s)) && (
               <Button
                 className="ml-4 bg-red-500 text-white hover:bg-red-600"
                 onClick={() => onDeleteClick(row.original)}
               >
                 Delete
               </Button>
-            </>
-          ),
+            );
+          }
+        },
       }),
     ],
     [user]
@@ -237,12 +236,14 @@ export default function Logpage() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="py-2 px-4 rounded-md focus:outline-none focus:ring-2 sm:order-2 xl:w-[200px]"
           />
-          <Button
-            className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 sm:order-2 xl:w-[100px]"
-            onClick={() => onDeleteClick()}
-          >
-            Delete All
-          </Button>
+          {["owner", "log-d"].some((s) => user.role.includes(s)) && (
+            <Button
+              className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 sm:order-2 xl:w-[100px]"
+              onClick={() => onDeleteClick()}
+            >
+              Delete All
+            </Button>
+          )}
         </div>
       </div>
 
