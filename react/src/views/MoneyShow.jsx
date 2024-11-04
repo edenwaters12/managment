@@ -16,7 +16,6 @@ export default function MoneyShow() {
       navigate("/404");
     }
   }, [user, navigate]);
-
   const { id } = useParams();
   const [entry, setEntry] = useState(null);
   const [loading, setLoading] = useState(true);
