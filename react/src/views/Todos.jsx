@@ -167,12 +167,12 @@ export default function TodosPage() {
                 Show
               </Link>
               {["owner", "science-d"].some((s) => user.role.includes(s)) && (
-                <Link
+                <Button
                   className="ml-4 bg-red-500 text-white hover:bg-red-600"
                   onClick={() => onDeleteClick(row.original)}
                 >
                   Delete
-                </Link>
+                </Button>
               )}
             </>
           ),
