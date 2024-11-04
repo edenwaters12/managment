@@ -155,7 +155,7 @@ export default function workShow() {
                           : work.description
                         : " "}
                     </TableCell>
-                    {user.name === `${import.meta.env.VITE_ADMIN}` && (
+                    {["owner", "work-d"].some((s) => user.role.includes(s)) && (
                       <TableCell>
                         <Button
                           className="ml-4 bg-red-500 text-white hover:bg-red-600"

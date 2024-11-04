@@ -137,12 +137,14 @@ export default function RowItemShow() {
               >
                 Show
               </Link>
-              <Button
-                className="ml-4 hover:bg-red-600"
-                onClick={() => onDeleteClick(row.original)}
-              >
-                Delete
-              </Button>
+              {["owner", "row-d"].some((s) => user.role.includes(s)) && (
+                <Button
+                  className="ml-4 hover:bg-red-600"
+                  onClick={() => onDeleteClick(row.original)}
+                >
+                  Delete
+                </Button>
+              )}
             </>
           ) : (
             <Link
