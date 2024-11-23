@@ -15,7 +15,7 @@ class CdmiDataController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'isDelete' => 'string|max:255',
-            'files.*' => 'max:4048000' // Max size 2GB
+            'files.*' => 'max:2048000' // Max size 2GB
         ]);
 
         // Handle file uploads
@@ -53,11 +53,29 @@ class CdmiDataController extends Controller
         return response()->json($rowItem, 201);
     }
 
-    // Retrieve all CdmiData
-    public function index()
+    public function index(Request $request)
     {
-        $cdmidata = CdmiData::orderBy('created_at', 'desc')->get();
-        return response()->json($cdmidata, 200);
+        $query = CdmiData::query();
+        
+        // Filter by category if provided
+        if (!($request->has('isDelete') && $request->isDelete == 'all')) {
+            $query->where('isDelete', 'False');
+        }
+    
+        $query->orderBy('created_at', 'desc');
+
+        $todos = $query->paginate(10);   
+    
+        $response = [
+            'data' => $todos->items(),          // Get the current page items
+            'total' => $todos->total(),         // Get the total number of todos
+            'current_page' => $todos->currentPage(), // Current page number
+            'last_page' => $todos->lastPage(),  // Total number of pages
+            'per_page' => $todos->perPage(),    // Items per page
+            'total_pages' => $todos->lastPage(), // Total pages available
+        ];
+         
+        return response()->json($todos->items(),200);
     }
 
     // Retrieve a specific CdmiData by ID
@@ -111,7 +129,7 @@ class CdmiDataController extends Controller
     }
 
     // Delete a specific CdmiData by ID
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         $rowItem = CdmiData::find($id);
 
@@ -136,26 +154,24 @@ class CdmiDataController extends Controller
         //  Move the file for the delete foldert
         $files = json_decode($rowItem->files, true);
         if ($files) {
-        foreach ($files as $file) {
-            // Get the original file path
-            $originalPath = "public/{$file}";
+            foreach ($files as $file) {
+                // Get the original file path
+                $originalPath = "public/{$file}";
 
-            // Construct the new path in the "delete" folder
-            $fileName = basename($file);
-            $newPath = "uploads/cdmi/delete/{$fileName}";
+                // Construct the new path in the "delete" folder
+                $fileName = basename($file);
+                $newPath = "uploads/cdmi/delete/{$fileName}";
 
-            // Move the file
-            if (Storage::exists($originalPath)) {
-                Storage::move($originalPath, "public/{$newPath}");
+                // Move the file
+                if (Storage::exists($originalPath)) {
+                    Storage::move($originalPath, "public/{$newPath}");
+                }
             }
         }
-    }
-
-
-
+        
         // Update for the deletion in delete than True
         $rowItem->update([
-            'isDelete' => $request->input('isDelete', $rowItem->isDelete),
+            'isDelete' => $request->input('isDelete','True'),
         ]);
 
         return response()->json($rowItem, 200);
