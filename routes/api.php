@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CdmiDataController;
 use App\Http\Controllers\RowItemController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\WorkController;
@@ -69,3 +70,24 @@ Route::post('/login', [AuthController::class, 'login']);
 // store the details like the google info is not protectd
 Route::post('/google-photos', [GooglePhotoController::class, 'store']);
 
+// cdmi-data
+
+
+// Route to create a new CdmiData entry (POST)
+Route::post('/cdmi-data', [CdmiDataController::class, 'store']);
+
+// Route to get all CdmiData entries (GET)
+Route::get('/cdmi-data', [CdmiDataController::class, 'index']);
+
+// Route to get a specific CdmiData entry by ID (GET)
+Route::get('/cdmi-data/{id}', [CdmiDataController::class, 'show']);
+
+// Route to update a specific CdmiData entry by ID (PUT/PATCH)
+Route::put('/cdmi-data/{id}', [CdmiDataController::class, 'update']);
+Route::patch('/cdmi-data/{id}', [CdmiDataController::class, 'update']); // Optional: If you want to use PATCH too
+
+// Route to delete a specific CdmiData entry by ID (DELETE)
+Route::delete('/cdmi-data/{id}', [CdmiDataController::class, 'destroy']);
+
+// Route to download a file from a specific CdmiData entry (GET)
+Route::get('/cdmi-data/{id}/download', [CdmiDataController::class, 'download']);
