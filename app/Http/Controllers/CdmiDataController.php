@@ -5,48 +5,47 @@ namespace App\Http\Controllers;
 use App\Models\CdmiData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
 
 class CdmiDataController extends Controller
 {
-    // Create a new CdmiData
     public function store(Request $request)
     {
-        // Validate the request
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'isDelete' => 'string|max:255',
-            'files.*' => 'max:2048000' // Max size 2GB
-        ]);
+        // Validate the input (title, description)
+        $validatedData = Validator::make($request->all(), [
+            'title' => 'string|max:255',
+            'description' => 'max:255',
+        ])->validate();
 
-        // Handle file uploads
+        // Check for files in the request
         $filePaths = [];
         if ($request->hasFile('files')) {
+            \Log::info('Files received:', ['files' => $request->file('files')]);
+
+            // Process each file
             $index = 1; // Initialize the index for naming files
             foreach ($request->file('files') as $file) {
+                if ($file->isValid()) {
+                    \Log::info('Valid file uploaded', ['file' => $file->getClientOriginalName()]);
 
-                $extension = $file->getClientOriginalExtension();
+                    // Generate file name
+                    $extension = $file->getClientOriginalExtension();
+                    $dateTime = now()->format('Y-m-d_His');
+                    $fileName = "{$index}_{$validatedData['title']}_{$dateTime}.{$extension}";
 
-                $dateTime = now()->format('Y-m-d_His'); 
+                    // Store the file with the new name in the 'uploads/cdmi' folder
+                    $path = $file->storeAs('uploads/cdmi', $fileName, 'public');
+                    $filePaths[] = $path;
 
-                // Generate the new file name with an index
-                $fileName = "{$index}_{$request->input('title')}_{$request->input('isDelete')}_{$dateTime}.{$extension}";
-
-                // Store the file with the new name in the cdmi folder
-                $path = $file->storeAs('uploads/cdmi', $fileName, 'public');
-
-                // Save the path in the filePaths array
-                $filePaths[] = $path;
-
-                // Increment the index for the next file
-                $index++;
+                    // Increment the index for the next file
+                    $index++;
+                } 
             }
-        }
-
-        // Store the data in the database
+        } 
         $rowItem = CdmiData::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'isDelete' => $request->isDelete,
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
             'files' => json_encode($filePaths),
         ]);
 
@@ -59,7 +58,7 @@ class CdmiDataController extends Controller
         
         // Filter by category if provided
         if (!($request->has('isDelete') && $request->isDelete == 'all')) {
-            $query->where('isDelete', 'False');
+            $query->where('isDelete', 'false');
         }
     
         $query->orderBy('created_at', 'desc');
@@ -129,7 +128,7 @@ class CdmiDataController extends Controller
     }
 
     // Delete a specific CdmiData by ID
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
         $rowItem = CdmiData::find($id);
 
@@ -137,7 +136,7 @@ class CdmiDataController extends Controller
             return response()->json(['message' => 'CdmiData not found'], 404);
         }
 
-        // // Delete associated files
+        // Delete associated files
         // $files = json_decode($rowItem->files, true);
         // if ($files) {
         //     foreach ($files as $file) {
@@ -149,7 +148,7 @@ class CdmiDataController extends Controller
         // // Delete the RowItem
         // $rowItem->delete();
 
-        // return response()->json(['message' => 'CdmiData deleted successfully'], 200);
+        // return response()->json(['message' => 'CdmiData deletedssssssssss successfully','data'=>$rowItem], 200);
         
         //  Move the file for the delete foldert
         $files = json_decode($rowItem->files, true);
@@ -171,7 +170,7 @@ class CdmiDataController extends Controller
         
         // Update for the deletion in delete than True
         $rowItem->update([
-            'isDelete' => $request->input('isDelete','True'),
+            'isDelete' => $request->input("isDelete","True"),
         ]);
 
         return response()->json($rowItem, 200);
