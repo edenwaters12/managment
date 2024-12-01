@@ -7,7 +7,7 @@ import ErrorBoundary from "./components/ErrorBoundary.jsx"; // Import your Error
 import React, { Suspense } from "react";
 
 // Lazy loading components
-const Dashboard = React.lazy(() => import("./views/Dashboard.jsx"));
+const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard.jsx"));
 const Login = React.lazy(() => import("./views/Login"));
 const NotFound = React.lazy(() => import("./views/NotFound"));
 const Signup = React.lazy(() => import("./views/Signup"));
@@ -23,7 +23,7 @@ const RowItemShow = React.lazy(() => import("./views/RowItems.jsx"));
 const RowItemFrom = React.lazy(() => import("./views/RowItemsFrom.jsx"));
 const Logpage = React.lazy(() => import("./views/log.jsx"));
 const GooglePhotosViewer = React.lazy(() =>
-  import("./views/GooglePhotosViewer.jsx")
+  import("./views/googlePhotos/GooglePhotosViewer.jsx")
 );
 
 const router = createBrowserRouter([
