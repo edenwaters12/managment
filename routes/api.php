@@ -52,7 +52,7 @@ Route::middleware(['auth:sanctum', 'auto.logout'])->group(function () {
 
     // API route for downloading a file
     Route::get('row/{id}/download/{fileName}', [RowItemController::class, 'download']);
-    Route::get('/row/{id}/download', [CdmiDataController::class, 'downloadZip']);
+    Route::get('/row/{id}/download', [RowItemController::class, 'downloadZip']);
     
     Route::get('/log', [IpInfoController::class, 'index']);
     Route::delete('/log/{id?}', [IpInfoController::class, 'delete']);
