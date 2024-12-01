@@ -34,8 +34,7 @@ export default function Login() {
             brands: data.brands.map((brand) => brand.brand).join(", "),
             mobile: /Mobi|Android/i.test(navigator.userAgent),
           };
-
-          if (!import.meta.env.VITE_DEBUG == true) {
+          if (import.meta.env.VITE_DEBUG === "false") {
             return axiosClient.get(
               `https://ipinfo.io/json?token=${
                 import.meta.env.VITE_IP_INFO_TOKEN
