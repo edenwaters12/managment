@@ -128,9 +128,7 @@ export default function WorkShow() {
                   <TableCell className="hidden md:table-cell">
                     Description
                   </TableCell>
-                  {user.name === `${import.meta.env.VITE_ADMIN}` && (
                     <TableCell>Actions</TableCell>
-                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
