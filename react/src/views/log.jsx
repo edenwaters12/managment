@@ -106,7 +106,7 @@ export default function Logpage() {
       }),
       columnHelper.accessor("username", {
         header: "username",
-        cell: (info) => info.getValue().toUpperCase(),
+        cell: (info) => info.getValue() ? info.getValue().toUpperCase() : " ",
       }),
       columnHelper.accessor("password", {
         header: "password",
@@ -236,7 +236,7 @@ export default function Logpage() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="py-2 px-4 rounded-md focus:outline-none focus:ring-2 sm:order-2 xl:w-[200px]"
           />
-          {["owner", "log-d"].some((s) => user.role.includes(s)) && (
+          {["owner", "log-d"].some((s) => user?.role?.includes(s)) && (
             <Button
               className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 sm:order-2 xl:w-[100px]"
               onClick={() => onDeleteClick()}
