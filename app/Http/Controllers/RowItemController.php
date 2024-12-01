@@ -166,7 +166,7 @@ class RowItemController extends Controller
     public function downloadZip($id)
     {
         // Find the RowItem entry by ID
-        $rowItem = CdmiData::find($id);
+        $rowItem = RowItem::find($id);
 
         if (!$rowItem) {
             return response()->json(['message' => 'CdmiData not found'], 404);
