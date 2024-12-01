@@ -177,7 +177,7 @@ class CdmiDataController extends Controller
     }
 
     // Download all files as a ZIP
-    public function downloadZip($id)
+    public function download($id)
     {
         // Find the RowItem entry by ID
         $rowItem = CdmiData::find($id);
