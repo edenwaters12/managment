@@ -1,8 +1,12 @@
 name: Sync Fork with Upstream
 
 on:
+  schedule:
+    - cron: '*/1 * * * *'  # Runs every 5 minutes
   push:
-    # Trigger this action whenever there are new commits to the main branch of the upstream repo
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -10,11 +14,11 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      # Checkout your fork repository
+      # Checkout the fork repository
       - name: Checkout fork
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Full depth to get all history
+          fetch-depth: 0  # Fetch all history to avoid issues
 
       # Set up Git
       - name: Set up Git
@@ -24,20 +28,20 @@ jobs:
       - name: Add upstream remote
         run: git remote add upstream https://github.com/d-cdmi/managment.git
 
-      # Fetch changes from the upstream repo
+      # Fetch changes from upstream
       - name: Fetch upstream
         run: git fetch upstream
 
-      # Checkout the main branch in your fork
+      # Checkout the main branch of your fork
       - name: Checkout main branch
         run: git checkout main
 
-      # Merge the changes from upstream's main branch into your fork's main branch
+      # Merge changes from upstream into your fork's main branch
       - name: Merge upstream changes into fork
         run: |
           git merge upstream/main --no-edit || exit 0  # Continue even if there are conflicts
 
-      # Push the changes to your fork (use GitHub token to authenticate)
+      # Push the changes to your fork
       - name: Push changes to fork
         run: git push origin main
         env:
