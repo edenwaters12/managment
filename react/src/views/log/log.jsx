@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx";
 import { Input } from "@/components/ui/input.jsx";
+import { Pen, Trash2 } from "lucide-react";
 
 export default function Logpage() {
   const { user, setNotification } = useStateContext();
@@ -151,7 +152,12 @@ export default function Logpage() {
                 to={`/log/${row.original.id}`}
                 className="text-blue-500 hover:underline"
               >
-                Show
+                <Button
+                  className="ml-4 hover:bg-red-600"
+                  onClick={() => onDeleteClick(row.original)}
+                >
+                  <Pen />
+                </Button>
               </Link>
             );
           }
@@ -161,7 +167,7 @@ export default function Logpage() {
                 className="ml-4 bg-red-500 text-white hover:bg-red-600"
                 onClick={() => onDeleteClick(row.original)}
               >
-                Delete
+                <Trash2 />
               </Button>
             );
           }
@@ -229,7 +235,7 @@ export default function Logpage() {
           />
           {["owner", "log-d"].some((s) => user?.role?.includes(s)) && (
             <Button
-              className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 sm:order-2 xl:w-[100px]"
+              className=" py-2 px-4 rounded-md hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 sm:order-2 xl:w-[100px]"
               onClick={() => onDeleteClick()}
             >
               Delete All

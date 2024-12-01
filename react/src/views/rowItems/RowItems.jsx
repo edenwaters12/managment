@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx";
 import { Input } from "@/components/ui/input.jsx";
-import { Download } from "lucide-react";
+import { Download, Pen, Trash2 } from "lucide-react";
 
 export default function RowItemShow() {
   const { user, setNotification } = useStateContext();
@@ -128,23 +128,26 @@ export default function RowItemShow() {
           return files.length > 0
             ? files.map((file, index) => (
                 <>
-                  <Link
-                    key={index}
-                    to={`${
-                      import.meta.env.VITE_API_DOWNLOAD_URL
-                    }/storage/${file}`}
-                    className="text-blue-500 hover:underline"
-                    target="_blank"
-                  >
-                    View File {index + 1}
-                  </Link>
-                  {files.length > 0 && (
-                    <Button
-                      onClick={() => handleDownload(info.row.original.id)}
+                  <div className="flex flex-wrap gap-2 items-center justify-around">
+                    <Link
+                      key={index}
+                      to={`${
+                        import.meta.env.VITE_API_DOWNLOAD_URL
+                      }/storage/${file}`}
+                      className="text-blue-500 hover:underline"
+                      target="_blank"
                     >
-                      <Download />
-                    </Button>
-                  )}
+                      View File {index + 1}
+                    </Link>
+                    {files.length > 0 && (
+                      <Button
+                        className="ml-4 hover:bg-blue-600"
+                        onClick={() => handleDownload(info.row.original.id)}
+                      >
+                        <Download />
+                      </Button>
+                    )}
+                  </div>
                 </>
               ))
             : "No files";
@@ -157,11 +160,13 @@ export default function RowItemShow() {
         cell: ({ row }) =>
           user.role === "owner" || user.role === "admin" ? (
             <>
-              <Link
-                to={`/row/${row.original.id}`}
-                className="text-blue-500 hover:underline"
-              >
-                Show
+              <Link to={`/row/${row.original.id}`}>
+                <Button
+                  className="ml-4 hover:bg-blue-600"
+                  onClick={() => onDeleteClick(row.original)}
+                >
+                  <Pen />
+                </Button>
               </Link>
 
               {["owner", "row-d"].some((s) => user.role.includes(s)) && (
@@ -169,7 +174,7 @@ export default function RowItemShow() {
                   className="ml-4 hover:bg-red-600"
                   onClick={() => onDeleteClick(row.original)}
                 >
-                  Delete
+                  <Trash2 />
                 </Button>
               )}
             </>

@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx";
 import { Input } from "@/components/ui/input.jsx";
+import { Pen, Trash2 } from "lucide-react";
 
 export default function TodosPage() {
   const { user, setNotification } = useStateContext();
@@ -158,20 +159,27 @@ export default function TodosPage() {
         header: "Actions",
         cell: ({ row }) => (
           <>
-            <Link
-              to={`/science/${row.original.id}`}
-              className="text-blue-500 hover:underline"
-            >
-              Show
-            </Link>
-            {["owner", "science-d"].some((s) => user.role.includes(s)) && (
-              <Button
-                className="ml-4 bg-red-500 text-white hover:bg-red-600"
-                onClick={() => onDeleteClick(row.original)}
+            <div className="flex flex-wrap gap-2 items-center justify-around">
+              <Link
+                to={`/science/${row.original.id}`}
+                className="text-blue-500 hover:underline"
               >
-                Delete
-              </Button>
-            )}
+                <Button
+                  className="ml-4 hover:bg-blue-600"
+                  onClick={() => onDeleteClick(row.original)}
+                >
+                  <Pen />
+                </Button>
+              </Link>
+              {["owner", "science-d"].some((s) => user.role.includes(s)) && (
+                <Button
+                  className="ml-4  hover:bg-red-600"
+                  onClick={() => onDeleteClick(row.original)}
+                >
+                  <Trash2 />
+                </Button>
+              )}
+            </div>
           </>
         ),
       }),
