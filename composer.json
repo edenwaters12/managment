@@ -4,6 +4,7 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
+    "version":"1.0.0",
     "require": {
         "php": "^8.0.0",
         "fruitcake/laravel-cors": "^3.0",
