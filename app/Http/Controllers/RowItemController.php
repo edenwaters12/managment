@@ -20,12 +20,26 @@ class RowItemController extends Controller
 
         // Handle file uploads
         $filePaths = [];
-        if($request->hasFile('files')) {
+        if ($request->hasFile('files')) {
+            $index = 1;
             foreach ($request->file('files') as $file) {
-                $path = $file->store('uploads', 'public');
-                $filePaths[] = $path;
+                if ($file->isValid()) {
+                    \Log::info('Valid file uploaded', ['file' => $file->getClientOriginalName()]);
+
+                    // Generate file name
+                    $extension = $file->getClientOriginalExtension();
+                    $dateTime = now()->format('Y-m-d_His');
+                    $fileName = "{$index}_{$request->author}_{$request->title}_{$dateTime}.{$extension}";
+
+                    // Store the file with the new name in the 'uploads/cdmi' folder
+                    $path = $file->storeAs('uploads', $fileName, 'public');
+                    $filePaths[] = $path;
+
+                    // Increment the index for the next file
+                    $index++;
+                } 
             }
-        }
+        } 
 
         // Store the data
         $rowItem = RowItem::create([
