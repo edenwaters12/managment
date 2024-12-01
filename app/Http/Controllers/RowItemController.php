@@ -149,7 +149,7 @@ class RowItemController extends Controller
         }
 
         // Return the file for download
-        return response()->download(storage_path("app/public/uploads/{$fileName}"));
+        return response()->download(storage_path("app/public/{$fileName}"));
     }
 
     // public function download($fileName)
