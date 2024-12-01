@@ -163,7 +163,7 @@ class RowItemController extends Controller
     //     return Storage::disk('public')->download($filePath);
     // }
 
-    public function downloadZip($id)
+    public function download($id)
     {
         // Find the RowItem entry by ID
         $rowItem = CdmiData::find($id);
@@ -200,7 +200,6 @@ class RowItemController extends Controller
         $zip->close();
 
         // Return the ZIP file for download
-       
-
-
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
 }
