@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/Button.jsx";
 import axiosClient from "../axios-client.js";
 import { useStateContext } from "@/context/ContextProvider.jsx";
@@ -17,7 +17,7 @@ const NotFoundPage = () => {
       setToken(null);
       setNotification("Logout............");
     });
-  }, [token]);
+  }, [setNotification, setToken, setUser, token]);
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
       <div className="text-center">

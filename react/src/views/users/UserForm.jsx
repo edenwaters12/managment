@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axiosClient from "../axios-client.js";
-import { useStateContext } from "../context/ContextProvider.jsx";
+import axiosClient from "../../axios-client.js";
+import { useStateContext } from "../../context/ContextProvider.jsx";
 import { Input } from "@/components/ui/Input.jsx";
 import { Button } from "@/components/ui/Button.jsx";
 import { Card } from "@/components/ui/Card.jsx";
@@ -62,7 +62,7 @@ export default function UserForm() {
           setLoading(false);
         });
     }
-  }, [id]);
+  }, [id, roles]);
 
   useEffect(() => {
     // Always apply dark mode
@@ -87,7 +87,6 @@ export default function UserForm() {
       ...user,
       role: selectedRoles, // Set the role field to the selected roles string
     };
-    console.log(updatedUser);
     const request = user.id
       ? axiosClient.put(`/users/${user.id}`, updatedUser)
       : axiosClient.post("/users", updatedUser);

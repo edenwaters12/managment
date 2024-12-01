@@ -6,7 +6,7 @@ import {
   getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import axiosClient from "../axios-client.js";
+import axiosClient from "../../axios-client.js";
 import {
   Select,
   SelectTrigger,
@@ -26,7 +26,7 @@ import {
   TableRow,
   TableHead,
 } from "@/components/ui/table";
-import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx";
+import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx";
 import { Input } from "@/components/ui/input.jsx";
 
 export default function TodosPage() {
@@ -117,7 +117,6 @@ export default function TodosPage() {
           getTodo();
         })
         .catch((e) => {
-          console.log(e);
           setNotification("Error deleting todo", e);
         });
     }

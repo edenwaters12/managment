@@ -6,13 +6,7 @@ import {
   getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import axiosClient from "../axios-client.js";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select.jsx";
+import axiosClient from "../../axios-client.js";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -26,14 +20,13 @@ import {
   TableRow,
   TableHead,
 } from "@/components/ui/table";
-import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx";
+import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx";
 import { Input } from "@/components/ui/input.jsx";
 
 export default function RowItemShow() {
   const { user, setNotification } = useStateContext();
   const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
-  const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(null);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -48,7 +41,7 @@ export default function RowItemShow() {
   const getTodos = () => {
     setLoading(true);
     axiosClient
-      .get(`/rows${category !== "all" ? `?category=${category}` : ""}`)
+      .get(`/rows`)
       .then((response) => {
         setTodos(response.data);
         setLoading(false);
@@ -61,7 +54,7 @@ export default function RowItemShow() {
 
   useEffect(() => {
     getTodos();
-  }, [category]);
+  }, []);
 
   const onDeleteClick = (todo) => {
     setSelectedTodo(todo);
@@ -77,7 +70,6 @@ export default function RowItemShow() {
           getTodos();
         })
         .catch((e) => {
-          console.log(e);
           setNotification("Error deleting todo", e);
         });
     }
@@ -168,7 +160,7 @@ export default function RowItemShow() {
     }
 
     return baseColumns;
-  }, [user, onDeleteClick]);
+  }, [columnHelper, user.role]);
 
   const filteredTodos = useMemo(() => {
     return (todos || []).filter(

@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import axiosClient from "../axios-client.js";
-import { Link, useNavigate } from "react-router-dom";
-import { useStateContext } from "../context/ContextProvider.jsx";
+import axiosClient from "../../axios-client.js";
+import { Link } from "react-router-dom";
+import { useStateContext } from "../../context/ContextProvider.jsx";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Loader from "@/components/ui/loader";
-import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx"; // Adjust the import path as necessary
+import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx"; // Adjust the import path as necessary
 
 export default function Users() {
   const { user, setNotification } = useStateContext();
-  const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);

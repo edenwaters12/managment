@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { Button } from "@/components/ui/button.jsx";
 import { Input } from "@/components/ui/Input.jsx";
@@ -10,7 +10,7 @@ import { ArrowLeft, ArrowRight, X } from "lucide-react";
 Modal.setAppElement("#root"); // Important for accessibility
 
 const GooglePhotosFetch = () => {
-  const { user, setNotification, notification } = useStateContext();
+  const { setNotification, notification } = useStateContext();
   const [allPhotos, setAllPhotos] = useState([]); // Store all fetched photos
   const [nextPageToken, setNextPageToken] = useState(null); // Track the next page token
   const [fullscreenImg, setFullscreenImg] = useState(""); // Store image for full screen
@@ -31,7 +31,7 @@ const GooglePhotosFetch = () => {
   const handleChange = (e) =>
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
 
-  const getAccessToken = async (refreshToken) => {
+  const getAccessToken = async () => {
     const { client_id, client_secret, refresh_token } = credentials;
     const url = "https://oauth2.googleapis.com/token";
     const params = new URLSearchParams({

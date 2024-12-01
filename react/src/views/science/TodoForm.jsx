@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axiosClient from "../axios-client.js";
+import axiosClient from "../../axios-client.js";
 import { Textarea } from "@/components/ui/textarea.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { Input } from "@/components/ui/Input.jsx";
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select.jsx";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useStateContext } from "@/context/ContextProvider.jsx";
+import Loader from "@/components/ui/Loader.jsx";
 
 export default function TodoForm() {
   const { user } = useStateContext();
@@ -85,7 +86,7 @@ export default function TodoForm() {
           });
       }
     }
-  }, [pathname, id]);
+  }, [pathname, id, user.role, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -112,6 +113,11 @@ export default function TodoForm() {
         )
       );
   };
+  if (loading) {
+    <div className="flex items-center justify-center p-4">
+      <Loader />
+    </div>;
+  }
 
   return (
     <div className="p-4 max-w-6xl mx-auto">

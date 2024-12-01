@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import axiosClient from "../axios-client.js";
+import axiosClient from "../../axios-client.js";
 import { Button } from "@/components/ui/Button.jsx";
 import { Card } from "@/components/ui/Card.jsx";
 import Loader from "@/components/ui/Loader.jsx";
@@ -36,7 +36,7 @@ export default function MoneyShow() {
       })
       .catch((err) => {
         setLoading(false);
-        setError("Error fetching data");
+        setError("Error fetching data", err);
       });
   };
 

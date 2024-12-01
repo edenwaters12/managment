@@ -1,9 +1,7 @@
-import { Link } from "react-router-dom";
 import { createRef, useState } from "react";
-import axiosClient from "../axios-client.js";
-import { useStateContext } from "../context/ContextProvider.jsx";
+import axiosClient from "../../axios-client.js";
+import { useStateContext } from "../../context/ContextProvider.jsx";
 import { Input } from "@/components/ui/Input.jsx";
-import { Button } from "@/components/ui/Button.jsx";
 import { Card } from "@/components/ui/Card.jsx";
 
 export default function Signup() {

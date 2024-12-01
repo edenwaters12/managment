@@ -7,23 +7,23 @@ import ErrorBoundary from "./components/ErrorBoundary.jsx"; // Import your Error
 import React, { Suspense } from "react";
 
 // Lazy loading components
-const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard.jsx"));
-const Login = React.lazy(() => import("./views/Login"));
+const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
+const Login = React.lazy(() => import("./views/login/Login"));
 const NotFound = React.lazy(() => import("./views/NotFound"));
-const Signup = React.lazy(() => import("./views/Signup"));
-const Users = React.lazy(() => import("./views/Users"));
-const UserForm = React.lazy(() => import("./views/UserForm"));
-const Todos = React.lazy(() => import("./views/Todos.jsx"));
-const TodoForm = React.lazy(() => import("./views/TodoForm.jsx"));
-const WorkShow = React.lazy(() => import("./views/WorkShow.jsx"));
-const WorkForm = React.lazy(() => import("./views/WorkForm.jsx"));
-const MoneyForm = React.lazy(() => import("./views/MoneyForm.jsx"));
-const MoneyShow = React.lazy(() => import("./views/MoneyShow.jsx"));
-const RowItemShow = React.lazy(() => import("./views/RowItems.jsx"));
-const RowItemFrom = React.lazy(() => import("./views/RowItemsFrom.jsx"));
-const Logpage = React.lazy(() => import("./views/log.jsx"));
+const Signup = React.lazy(() => import("./views/login/Signup"));
+const Users = React.lazy(() => import("./views/users/Users"));
+const UserForm = React.lazy(() => import("./views/users/UserForm"));
+const Todos = React.lazy(() => import("./views/science/Todos"));
+const TodoForm = React.lazy(() => import("./views/science/TodoForm"));
+const WorkShow = React.lazy(() => import("./views/work/WorkShow"));
+const WorkForm = React.lazy(() => import("./views/work/workForm"));
+const MoneyForm = React.lazy(() => import("./views/money/MoneyForm"));
+const MoneyShow = React.lazy(() => import("./views/money/MoneyShow"));
+const RowItemShow = React.lazy(() => import("./views/rowItems/RowItems"));
+const RowItemFrom = React.lazy(() => import("./views/rowItems/RowItemsFrom"));
+const Logpage = React.lazy(() => import("./views/log/log"));
 const GooglePhotosViewer = React.lazy(() =>
-  import("./views/googlePhotos/GooglePhotosViewer.jsx")
+  import("./views/googlePhotos/GooglePhotosViewer")
 );
 
 const router = createBrowserRouter([

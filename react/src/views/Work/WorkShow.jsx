@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axiosClient from "../axios-client.js";
+import axiosClient from "../../axios-client.js";
 import {
   Select,
   SelectTrigger,
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Loader from "@/components/ui/loader";
 import { useStateContext } from "@/context/ContextProvider.jsx";
-import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx";
+import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx";
 import {
   Table,
   TableHeader,
@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function workShow() {
+export default function WorkShow() {
   const { user, setNotification } = useStateContext();
   const navigate = useNavigate();
 
@@ -67,7 +67,6 @@ export default function workShow() {
           getWork();
         })
         .catch((e) => {
-          console.log(e);
           setNotification("Error deleting Work", e);
         });
     }

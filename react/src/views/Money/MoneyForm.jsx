@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Input } from "@/components/ui/Input.jsx";
-import axiosClient from "../axios-client.js";
+import axiosClient from "../../axios-client.js";
 import { Button } from "@/components/ui/Button.jsx";
 import { Card } from "@/components/ui/Card.jsx";
 import { Alert } from "@/components/ui/Alert.jsx";
 import Loader from "@/components/ui/Loader.jsx";
 import { Textarea } from "@/components/ui/textarea.jsx";
-import { AlertDialogDemo } from "../components/AlertDialogDemo.jsx";
+import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx";
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
 } from "@/components/ui/Select.jsx";
-import { useStateContext } from "../context/ContextProvider.jsx";
+import { useStateContext } from "../../context/ContextProvider.jsx";
 
 export default function MoneyForm() {
   const { user, setNotification } = useStateContext();
@@ -63,7 +63,7 @@ export default function MoneyForm() {
       };
       fetchData();
     }
-  }, [id]);
+  }, [id, setNotification]);
 
   const onSubmit = async (ev) => {
     ev.preventDefault();

@@ -1,6 +1,6 @@
-import axiosClient from "../axios-client.js";
+import axiosClient from "../../axios-client.js";
 import { useRef, useState } from "react";
-import { useStateContext } from "../context/ContextProvider.jsx";
+import { useStateContext } from "../../context/ContextProvider.jsx";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button.jsx";
 
@@ -69,7 +69,6 @@ export default function Login() {
           setLoading(false);
         });
     } else {
-      console.log("User agent data is not supported in this browser.");
       setMessage("User agent data is not supported in this browser.");
       axiosClient
         .get("/get-ipinfo")
@@ -81,7 +80,6 @@ export default function Login() {
             data: payloadData,
           };
 
-          console.log("Fallback Payload for login:"); // Log fallback payload
           return axiosClient.post("/login", payload);
         })
         .then(({ data }) => {
