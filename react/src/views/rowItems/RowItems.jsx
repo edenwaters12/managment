@@ -83,10 +83,9 @@ export default function RowItemShow() {
       const blob = await axiosClient.get(`/row/${id}/download`, {
         responseType: "blob",
       });
-      const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob.data);
       const link = document.createElement("a");
       link.href = url;
-      console.log(url);
       link.setAttribute(
         "download",
         `${id}_${Date.now()}__${Math.random()
