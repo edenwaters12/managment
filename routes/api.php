@@ -91,3 +91,12 @@ Route::delete('/cdmi-data/{id}', [CdmiDataController::class, 'destroy']);
 
 // Route to download a file from a specific CdmiData entry (GET)
 Route::get('/cdmi-data/{id}/download', [CdmiDataController::class, 'download']);
+
+// add Health Route
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Application is healthy',
+        'timestamp' => now()
+    ], 200);
+});
