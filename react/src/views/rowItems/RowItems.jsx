@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { AlertDialogDemo } from "@/components/AlertDialogDemo.jsx";
 import { Input } from "@/components/ui/input.jsx";
+import { Download } from "lucide-react";
 
 export default function RowItemShow() {
   const { user, setNotification } = useStateContext();
@@ -77,6 +78,31 @@ export default function RowItemShow() {
     setSelectedTodo(null);
   };
 
+  const handleDownload = async (id) => {
+    try {
+      const blob = await axiosClient.get(`/row/${id}/download`, {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      console.log(url);
+      link.setAttribute(
+        "download",
+        `${id}_${Date.now()}__${Math.random()
+          .toString(36)
+          .substring(2, 10)}.zip`
+      ); // File name for the download
+      document.body.appendChild(link);
+      link.click(); // Trigger the download
+      document.body.removeChild(link); // Clean up
+      window.URL.revokeObjectURL(url); // Release memory
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert("Failed to download the file. Please try again.");
+    }
+  };
+
   const columnHelper = createColumnHelper();
 
   const columns = useMemo(() => {
@@ -102,16 +128,25 @@ export default function RowItemShow() {
           const files = JSON.parse(info.getValue() || "[]");
           return files.length > 0
             ? files.map((file, index) => (
-                <Link
-                  key={index}
-                  to={`${
-                    import.meta.env.VITE_API_DOWNLOAD_URL
-                  }/storage/${file}`}
-                  className="text-blue-500 hover:underline"
-                  target="_blank"
-                >
-                  View File {index + 1}
-                </Link>
+                <>
+                  <Link
+                    key={index}
+                    to={`${
+                      import.meta.env.VITE_API_DOWNLOAD_URL
+                    }/storage/${file}`}
+                    className="text-blue-500 hover:underline"
+                    target="_blank"
+                  >
+                    View File {index + 1}
+                  </Link>
+                  {files.length > 0 && (
+                    <Button
+                      onClick={() => handleDownload(info.row.original.id)}
+                    >
+                      <Download />
+                    </Button>
+                  )}
+                </>
               ))
             : "No files";
         },
@@ -129,6 +164,7 @@ export default function RowItemShow() {
               >
                 Show
               </Link>
+
               {["owner", "row-d"].some((s) => user.role.includes(s)) && (
                 <Button
                   className="ml-4 hover:bg-red-600"
